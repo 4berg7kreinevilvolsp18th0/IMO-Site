@@ -13,27 +13,30 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [loginAttempts, setLoginAttempts] = useState(0);
   const [isBlocked, setIsBlocked] = useState(false);
   const [blockUntil, setBlockUntil] = useState<Date | null>(null);
 
   useEffect(() => {
-    // Проверка блокировки из localStorage
-    const blocked = localStorage.getItem('login_blocked');
-    if (blocked) {
-      const blockTime = new Date(blocked);
-      if (blockTime > new Date()) {
-        setIsBlocked(true);
-        setBlockUntil(blockTime);
-      } else {
-        localStorage.removeItem('login_blocked');
-        localStorage.removeItem('login_attempts');
+    // Проверка блокировки на сервере (не из localStorage!)
+    async function checkBlockStatus() {
+      try {
+        const response = await fetch('/api/auth/block');
+        const data = await response.json();
+        
+        if (data.blocked) {
+          setIsBlocked(true);
+          // Если есть retryAfter, установить время разблокировки
+          if (data.retryAfter) {
+            const unblockTime = new Date(Date.now() + data.retryAfter * 1000);
+            setBlockUntil(unblockTime);
+          }
+        }
+      } catch (err) {
+        // Игнорируем ошибки проверки блокировки
       }
     }
-
-    // Проверка попыток входа
-    const attempts = parseInt(localStorage.getItem('login_attempts') || '0');
-    setLoginAttempts(attempts);
+    
+    checkBlockStatus();
   }, []);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -95,38 +98,23 @@ export default function LoginPage() {
       const { data, error: signInError } = await signIn(email, password);
 
       if (signInError) {
-        // Увеличить счетчик попыток
-        const attempts = parseInt(localStorage.getItem('login_attempts') || '0') + 1;
-        localStorage.setItem('login_attempts', attempts.toString());
-        setLoginAttempts(attempts);
-
-        // Блокировка после 5 неудачных попыток
-        // ВАЖНО: Это клиентская блокировка, легко обходится
-        // Реальная блокировка должна быть на сервере (через rate limit API)
-        if (attempts >= 5) {
-          const blockTime = new Date(Date.now() + 15 * 60 * 1000); // 15 минут
-          localStorage.setItem('login_blocked', blockTime.toISOString());
-          setIsBlocked(true);
-          setBlockUntil(blockTime);
-          
-          // Логирование блокировки
-          await logLoginAttempt(email, 'blocked');
-          
-          setError('Слишком много неудачных попыток. Доступ заблокирован на 15 минут.');
-          setLoading(false);
-          return;
-        }
-
         // Логирование неудачной попытки
         await logLoginAttempt(email, 'failed', signInError.message);
 
         // Унифицированное сообщение об ошибке (не раскрывать информацию)
         // Всегда одинаковое сообщение, независимо от причины
+        // БЕЗОПАСНОСТЬ: Не раскрываем количество попыток или причину ошибки
         let errorMessage = 'Неверный email или пароль';
         
-        // Только для внутренних ошибок показываем детали
-        if (signInError.message?.includes('Too many requests')) {
-          errorMessage = 'Слишком много запросов. Попробуйте позже.';
+        // Только для rate limit показываем специальное сообщение
+        if (signInError.message?.includes('Too many requests') || rateLimitCheck.status === 429) {
+          errorMessage = 'Слишком много попыток. Попробуйте позже.';
+          setIsBlocked(true);
+          const rateLimitData = await rateLimitCheck.json();
+          if (rateLimitData.retryAfter) {
+            const unblockTime = new Date(Date.now() + rateLimitData.retryAfter * 1000);
+            setBlockUntil(unblockTime);
+          }
         }
         
         setError(errorMessage);
@@ -167,10 +155,6 @@ export default function LoginPage() {
         }
       }
 
-      // Успешный вход - очистить счетчики
-      localStorage.removeItem('login_attempts');
-      localStorage.removeItem('login_blocked');
-      
       // Логирование успешного входа
       await logLoginAttempt(email, 'success');
 
@@ -200,8 +184,8 @@ export default function LoginPage() {
         }),
       });
     } catch (err) {
-      // Игнорируем ошибки логирования
-      console.error('Log error:', err);
+      // Игнорируем ошибки логирования (не критично)
+      // Логирование ошибок логирования может привести к бесконечному циклу
     }
   }
 
