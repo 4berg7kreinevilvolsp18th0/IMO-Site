@@ -131,6 +131,22 @@ async def detailed_health_check(db: Session = Depends(get_db)):
     except Exception as e:
         errors.append(f"Supabase: {str(e)}")
     
+    # Определить общий статус
+    active_checks = [v for v in checks.values() if v is True]
+    if len(active_checks) == len([v for v in checks.values() if v is not None]):
+        status = "ok"
+    elif len(active_checks) > 0:
+        status = "degraded"
+    else:
+        status = "error"
+    
+    return {
+        "status": status,
+        "checks": checks,
+        "errors": errors if errors else None,
+        "timestamp": datetime.utcnow().isoformat(),
+        "version": "2.0.0"
+    }
 
 
 # ==================== Directions ====================
