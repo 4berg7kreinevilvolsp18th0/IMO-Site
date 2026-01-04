@@ -269,3 +269,32 @@ RETURNS TABLE (
 BEGIN
     RETURN QUERY
     SELECT 
+-- 8. Дополнительные индексы для производительности
+-- ===============================
+
+-- Индекс для поиска по частичному совпадению (триграммы)
+CREATE INDEX IF NOT EXISTS idx_appeals_title_trgm 
+ON appeals USING GIN(title gin_trgm_ops);
+
+CREATE INDEX IF NOT EXISTS idx_content_title_trgm 
+ON content USING GIN(title gin_trgm_ops);
+
+-- Индекс для быстрого поиска по датам
+CREATE INDEX IF NOT EXISTS idx_appeals_created_at_month 
+ON appeals(DATE_TRUNC('month', created_at));
+
+-- Индекс для комбинированного поиска
+CREATE INDEX IF NOT EXISTS idx_appeals_status_priority_created 
+ON appeals(status, priority DESC, created_at DESC) 
+WHERE status IN ('new', 'in_progress');
+
+-- ===============================
+-- Готово!
+-- ===============================
+-- 
+-- После применения миграции:
+-- 1. Обновите статистику: ANALYZE;
+-- 2. Обновите материализованное представление: SELECT refresh_appeals_stats();
+-- 3. Проверьте производительность запросов
+--
+
