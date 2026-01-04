@@ -28,6 +28,7 @@ export async function GET() {
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'no-store, max-age=0',
+        'X-API-Version': '1.0.0',
       },
     });
   } catch (error: any) {
