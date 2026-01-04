@@ -193,10 +193,30 @@ def get_direction(direction_id: UUID, db: Session = Depends(get_db)):
 
 @app.get("/api/directions/slug/{slug}", response_model=Direction)
 def get_direction_by_slug(slug: str, db: Session = Depends(get_db)):
-    """Get direction by slug"""
+    """Get direction by slug (cached for 1 hour)"""
+    cache_key_str = cache_direction_key(slug=slug)
+    cached = get_cache(cache_key_str)
+    if cached is not None:
+        # Reconstruct Direction object from dict
+        from models import Direction
+        return Direction(**cached)
+    
     direction = crud.get_direction_by_slug(db, slug)
     if not direction:
         raise HTTPException(status_code=404, detail="Direction not found")
+    
+    # Cache the result
+    direction_dict = {
+        "id": str(direction.id),
+        "slug": direction.slug,
+        "title": direction.title,
+        "description": direction.description,
+        "color_key": direction.color_key,
+        "is_active": direction.is_active,
+        "created_at": direction.created_at.isoformat() if direction.created_at else None
+    }
+    set_cache(cache_key_str, direction_dict, ttl=3600)  # 1 hour
+    
     return direction
 
 
@@ -374,17 +394,42 @@ def get_content(content_id: UUID, db: Session = Depends(get_db)):
 
 @app.get("/api/content/slug/{slug}", response_model=Content)
 def get_content_by_slug(slug: str, db: Session = Depends(get_db)):
-    """Get content by slug"""
+    """Get content by slug (cached for 30 minutes)"""
+    cache_key_str = cache_content_key(slug=slug)
+    cached = get_cache(cache_key_str)
+    if cached is not None:
+        from models import Content
+        return Content(**cached)
+    
     content = crud.get_content_by_slug(db, slug)
     if not content:
         raise HTTPException(status_code=404, detail="Content not found")
+    
+    # Cache only published content
+    if content.status == "published":
+        content_dict = {
+            "id": str(content.id),
+            "type": content.type,
+            "title": content.title,
+            "slug": content.slug,
+            "body": content.body,
+            "direction_id": str(content.direction_id) if content.direction_id else None,
+            "status": content.status,
+            "published_at": content.published_at.isoformat() if content.published_at else None,
+            "updated_at": content.updated_at.isoformat() if content.updated_at else None
+        }
+        set_cache(cache_key_str, content_dict, ttl=1800)  # 30 minutes
+    
     return content
 
 
 @app.post("/api/content", response_model=Content, status_code=status.HTTP_201_CREATED)
 def create_content(content: ContentCreate, db: Session = Depends(get_db)):
     """Create content (admin endpoint)"""
-    return crud.create_content(db, content)
+    new_content = crud.create_content(db, content)
+    # Invalidate content cache
+    invalidate_content_cache()
+    return new_content
 
 
 @app.patch("/api/content/{content_id}", response_model=Content)
@@ -397,6 +442,8 @@ def update_content(
     content = crud.update_content(db, content_id, content_update)
     if not content:
         raise HTTPException(status_code=404, detail="Content not found")
+    # Invalidate cache for this content
+    invalidate_content_cache(content_id=str(content_id), slug=content.slug)
     return content
 
 
