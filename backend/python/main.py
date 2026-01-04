@@ -37,8 +37,9 @@ app = FastAPI(
     title="OSS DVFU API",
     description="Backend API for OSS DVFU website",
     version="2.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc"
+    docs_url="/api/v1/docs",
+    redoc_url="/api/v1/redoc",
+    openapi_url="/api/v1/openapi.json"
 )
 
 # Setup rate limiting
@@ -63,10 +64,14 @@ app.add_middleware(
 )
 
 
-# Health check
-@app.get("/health")
+# ==================== Health Checks ====================
+
+@app.get("/health", tags=["Health"])
 async def health_check():
-    return {"status": "ok"}
+    """
+    Простая проверка работоспособности API
+    """
+    return {
 
 
 # ==================== Directions ====================
