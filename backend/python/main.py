@@ -72,6 +72,65 @@ async def health_check():
     Простая проверка работоспособности API
     """
     return {
+        "status": "ok",
+        "timestamp": datetime.utcnow().isoformat(),
+        "version": "2.0.0"
+    }
+
+
+@app.get("/health/detailed", tags=["Health"])
+async def detailed_health_check(db: Session = Depends(get_db)):
+    """
+    Детальная проверка всех компонентов системы
+    """
+    checks = {
+        "database": False,
+        "redis": False,
+        "supabase": False
+    }
+    
+    errors = []
+    
+    # Проверка БД
+    try:
+        from sqlalchemy import text
+        db.execute(text("SELECT 1"))
+        checks["database"] = True
+    except Exception as e:
+        errors.append(f"Database: {str(e)}")
+    
+    # Проверка Redis (если настроен)
+    try:
+        redis_url = os.getenv("REDIS_URL")
+        if redis_url:
+            import redis
+            r = redis.from_url(redis_url, socket_connect_timeout=1)
+            r.ping()
+            checks["redis"] = True
+        else:
+            checks["redis"] = None  # Не настроен
+    except Exception as e:
+        errors.append(f"Redis: {str(e)}")
+    
+    # Проверка Supabase (если настроен)
+    try:
+        supabase_url = os.getenv("SUPABASE_URL")
+        if supabase_url:
+            import httpx
+            async with httpx.AsyncClient() as client:
+                response = await client.get(
+                    f"{supabase_url}/rest/v1/",
+                    timeout=2.0
+                )
+                if response.status_code < 500:
+                    checks["supabase"] = True
+                else:
+                    errors.append(f"Supabase: HTTP {response.status_code}")
+        else:
+            checks["supabase"] = None  # Не настроен
+    except Exception as e:
+        errors.append(f"Supabase: {str(e)}")
+    
 
 
 # ==================== Directions ====================
