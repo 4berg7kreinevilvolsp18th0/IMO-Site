@@ -180,14 +180,38 @@ def get_directions(
     # For caching, we only cache the common case (skip=0, limit=100, active_only=True)
     # Other cases bypass cache
     if skip == 0 and limit == 100:
+                           if d.created_at else None} for d in directions]
+        set_cache(cache_key_str, directions_dict, ttl=3600)  # 1 hour
+    
+    return directions
 
 
 @app.get("/api/directions/{direction_id}", response_model=Direction)
 def get_direction(direction_id: UUID, db: Session = Depends(get_db)):
-    """Get direction by ID"""
+    """Get direction by ID (cached for 1 hour)"""
+    cache_key_str = cache_direction_key(direction_id=str(direction_id))
+    cached = get_cache(cache_key_str)
+    if cached is not None:
+        # Reconstruct Direction object from dict
+        from models import Direction
+        return Direction(**cached)
+    
     direction = crud.get_direction(db, direction_id)
     if not direction:
         raise HTTPException(status_code=404, detail="Direction not found")
+    
+    # Cache the result
+    direction_dict = {
+        "id": str(direction.id),
+        "slug": direction.slug,
+        "title": direction.title,
+        "description": direction.description,
+        "color_key": direction.color_key,
+        "is_active": direction.is_active,
+        "created_at": direction.created_at.isoformat() if direction.created_at else None
+    }
+    set_cache(cache_key_str, direction_dict, ttl=3600)  # 1 hour
+    
     return direction
 
 
