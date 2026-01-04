@@ -180,6 +180,21 @@ def get_directions(
     # For caching, we only cache the common case (skip=0, limit=100, active_only=True)
     # Other cases bypass cache
     if skip == 0 and limit == 100:
+        cache_key_str = cache_directions_key(active_only=active_only)
+        cached = get_cache(cache_key_str)
+        if cached is not None:
+            return cached
+    
+    # Get from database
+    directions = crud.get_directions(db, skip=skip, limit=limit, active_only=active_only)
+    
+    # Cache only common case
+    if skip == 0 and limit == 100:
+        cache_key_str = cache_directions_key(active_only=active_only)
+        # Convert to dict for caching
+        directions_dict = [{"id": str(d.id), "slug": d.slug, "title": d.title, 
+                           "description": d.description, "color_key": d.color_key,
+                           "is_active": d.is_active, "created_at": d.created_at.isoformat() 
                            if d.created_at else None} for d in directions]
         set_cache(cache_key_str, directions_dict, ttl=3600)  # 1 hour
     
