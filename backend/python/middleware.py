@@ -1,5 +1,5 @@
 """
-Middleware for rate limiting, caching, and logging
+Middleware for rate limiting, caching, logging, and metrics
 """
 from fastapi import Request, HTTPException, status
 from fastapi.responses import JSONResponse
@@ -9,6 +9,8 @@ from slowapi.errors import RateLimitExceeded
 from typing import Callable
 import time
 import logging
+import uuid
+from metrics import record_request, increment_active_requests, decrement_active_requests
 
 # Setup logging
 logging.basicConfig(
@@ -32,13 +34,20 @@ def setup_rate_limiting(app):
 
 async def logging_middleware(request: Request, call_next: Callable):
     """
-    Log all requests
+    Log all requests, collect metrics, and add headers
     """
     start_time = time.time()
+    request_id = str(uuid.uuid4())
+    
+    # Увеличить счетчик активных запросов
+    increment_active_requests()
+    
+    # Получить endpoint (без query параметров для метрик)
+    endpoint = request.url.path
     
     # Log request
     logger.info(
-        f"{request.method} {request.url.path} - "
+        f"[{request_id}] {request.method} {endpoint} - "
         f"Client: {get_remote_address(request)}"
     )
     
@@ -46,24 +55,43 @@ async def logging_middleware(request: Request, call_next: Callable):
         response = await call_next(request)
         process_time = time.time() - start_time
         
+        # Записать метрику
+        record_request(request.method, endpoint, response.status_code, process_time)
+        
         # Log response
         logger.info(
-            f"{request.method} {request.url.path} - "
+            f"[{request_id}] {request.method} {endpoint} - "
             f"Status: {response.status_code} - "
             f"Time: {process_time:.3f}s"
         )
         
-        # Add process time header
-        response.headers["X-Process-Time"] = str(process_time)
+        # Add headers
+        response.headers["X-Process-Time"] = f"{process_time:.3f}"
+        response.headers["X-Request-ID"] = request_id
+        response.headers["X-API-Version"] = "2.0.0"
+        
+        # Rate limiting headers (если есть)
+        if hasattr(request.state, 'rate_limit'):
+            response.headers["X-RateLimit-Limit"] = str(getattr(request.state, 'rate_limit_limit', '100'))
+            response.headers["X-RateLimit-Remaining"] = str(getattr(request.state, 'rate_limit_remaining', '99'))
+            response.headers["X-RateLimit-Reset"] = str(getattr(request.state, 'rate_limit_reset', int(time.time()) + 60))
+        
         return response
     except Exception as e:
         process_time = time.time() - start_time
+        
+        # Записать метрику ошибки
+        record_request(request.method, endpoint, 500, process_time)
+        
         logger.error(
-            f"{request.method} {request.url.path} - "
+            f"[{request_id}] {request.method} {endpoint} - "
             f"Error: {str(e)} - "
             f"Time: {process_time:.3f}s"
         )
         raise
+    finally:
+        # Уменьшить счетчик активных запросов
+        decrement_active_requests()
 
 
 # Simple in-memory cache (for development)
