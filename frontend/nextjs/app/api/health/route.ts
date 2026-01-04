@@ -21,6 +21,7 @@ export async function GET() {
       environment: process.env.NODE_ENV,
       vercel: {
         region: process.env.VERCEL_REGION || 'unknown',
+        deployment: process.env.VERCEL_DEPLOYMENT_ID || 'unknown',
       },
     }, {
       status: 200,
