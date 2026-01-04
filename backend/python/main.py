@@ -12,6 +12,13 @@ import search
 import export
 import analytics
 from middleware import setup_rate_limiting, logging_middleware, limiter
+from metrics import get_metrics
+from cache import (
+    get_cache, set_cache, cache_directions_key, cache_direction_key,
+    cache_content_key, cache_stats_key,
+    invalidate_directions_cache, invalidate_direction_cache,
+    invalidate_content_cache, invalidate_stats_cache
+)
 
 from database import get_db, engine, Base
 from models import Appeal, Direction, Content, Document, AppealAttachment
@@ -39,6 +46,7 @@ app = FastAPI(
     version="2.0.0",
     docs_url="/api/v1/docs",
     redoc_url="/api/v1/redoc",
+    openapi_url="/api/v1/openapi.json"
     openapi_url="/api/v1/openapi.json"
 )
 
@@ -74,7 +82,8 @@ async def health_check():
     return {
         "status": "ok",
         "timestamp": datetime.utcnow().isoformat(),
-        "version": "2.0.0"
+        "version": "2.0.0",
+        "service": "OSS DVFU API"
     }
 
 
@@ -82,6 +91,7 @@ async def health_check():
 async def detailed_health_check(db: Session = Depends(get_db)):
     """
     Детальная проверка всех компонентов системы
+    Проверяет: база данных, Redis, Supabase
     """
     checks = {
         "database": False,
@@ -149,6 +159,14 @@ async def detailed_health_check(db: Session = Depends(get_db)):
     }
 
 
+@app.get("/metrics", tags=["Health"])
+async def metrics_endpoint():
+    """
+    Метрики API (последние 5 минут)
+    """
+    return get_metrics()
+
+
 # ==================== Directions ====================
 
 @app.get("/api/directions", response_model=List[Direction])
@@ -158,8 +176,10 @@ def get_directions(
     limit: int = Query(100, ge=1, le=1000),
     db: Session = Depends(get_db)
 ):
-    """Get all directions"""
-    return crud.get_directions(db, skip=skip, limit=limit, active_only=active_only)
+    """Get all directions (cached for 1 hour)"""
+    # For caching, we only cache the common case (skip=0, limit=100, active_only=True)
+    # Other cases bypass cache
+    if skip == 0 and limit == 100:
 
 
 @app.get("/api/directions/{direction_id}", response_model=Direction)
