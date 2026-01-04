@@ -60,3 +60,6 @@ docs/ru/CODE_SCANNING.md
 /docs
 ERRORS_REPORT.md
 backend/python/QUICK_DEPLOY.md
+ERRORS_AND_SECURITY_REPORT.md
+backend/python/README_DEPLOY.md
+backend/python/DEPLOY_CHECKLIST.md
