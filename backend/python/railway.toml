@@ -1,8 +1,8 @@
-# Railway конфигурация (альтернатива railway.json)
+# Railway конфигурация
+# Этот файл помогает Railway правильно определить Python приложение
 
 [build]
 builder = "nixpacks"
 
 [deploy]
 startCommand = "uvicorn main:app --host 0.0.0.0 --port $PORT --workers 2"
-
