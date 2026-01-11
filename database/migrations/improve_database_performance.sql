@@ -269,6 +269,25 @@ RETURNS TABLE (
 BEGIN
     RETURN QUERY
     SELECT 
+        a.id,
+        a.title,
+        a.deadline,
+        (CURRENT_DATE - a.deadline)::INTEGER AS days_overdue,
+        a.priority,
+        a.assigned_to
+    FROM appeals a
+    WHERE 
+        a.deadline IS NOT NULL
+        AND a.deadline < CURRENT_DATE
+        AND a.status != 'closed'
+    ORDER BY a.deadline ASC, a.priority DESC;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ===============================
+-- 5. Валидация на уровне БД
+-- ===============================
+
 -- 8. Дополнительные индексы для производительности
 -- ===============================
 
