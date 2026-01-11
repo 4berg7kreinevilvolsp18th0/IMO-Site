@@ -99,3 +99,23 @@ export default function ManageStatsPage() {
       }
 
       const today = new Date().toISOString().split('T')[0];
+      const statsData = {
+        period: today,
+        source: 'manual',
+        data: {
+          total: parseInt(total),
+          by_status: {
+            new: parseInt(newCount),
+            in_progress: parseInt(inProgress),
+            waiting: parseInt(waiting),
+            closed: parseInt(closed),
+          },
+          created_today: parseInt(createdToday) || 0,
+          closed_today: parseInt(closedToday) || 0,
+          timestamp: new Date().toISOString(),
+        },
+        created_by: user.id,
+      };
+
+      // Проверяем, есть ли уже данные за сегодня (manual)
+      const { data: existing } = await supabase
