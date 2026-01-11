@@ -29,6 +29,25 @@ export default function StatisticsPage() {
     return () => clearInterval(interval);
   }, []);
 
+  async function loadStats() {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Получаем статистику из таблицы statistics (от бота или ручной ввод)
+      // За последние 90 дней
+      const ninetyDaysAgo = new Date();
+      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+      const startDate = ninetyDaysAgo.toISOString().split('T')[0];
+
+      // Получаем статистику за последние 90 дней
+      const { data: stats, error: statsError } = await supabase
+        .from('statistics')
+        .select('*')
+        .gte('period', startDate)
+        .order('period', { ascending: true });
+
+      if (statsError) {
 
         // Преобразуем в массив и сортируем
         const dailyArray = Array.from(dailyMap.entries())
