@@ -32,7 +32,9 @@ def test_metrics_endpoint(client):
     """Test metrics endpoint"""
     response = client.get("/metrics")
     assert response.status_code == status.HTTP_200_OK
+    data = response.json()
     assert "timestamp" in data
     assert "total_requests" in data
     assert "error_rate" in data
     assert "top_endpoints" in data
+
