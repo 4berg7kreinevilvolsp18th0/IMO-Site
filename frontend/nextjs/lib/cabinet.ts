@@ -118,6 +118,7 @@ export function getAvailableSections(cabinetType: CabinetType): Array<{
   switch (cabinetType) {
     case 'member':
       return [
+        ...baseSections,
         {
           title: 'Статистика',
           href: '/cabinet/stats',
@@ -140,3 +141,12 @@ export function getAvailableSections(cabinetType: CabinetType): Array<{
           href: '/cabinet/stats',
           description: 'Ввод статистики обращений',
           icon: '📊',
+        },
+        {
+          title: 'Обращения',
+          href: '/cabinet/appeals',
+          description: 'Управление обращениями вашего направления',
+          icon: '📝',
+        },
+        {
+          title: 'Контент',
