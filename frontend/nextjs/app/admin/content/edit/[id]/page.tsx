@@ -199,6 +199,46 @@ export default function EditContentPage() {
             .eq('slug', directionSlug)
             .single();
 
+          if (dirData) {
+            directionId = dirData.id;
+          }
+        }
+
+        const data: any = {
+          title: title.trim(),
+          slug: slug.trim(),
+          body: body.trim(),
+          type,
+          status: 'draft',
+          direction_id: directionId,
+        };
+
+        const { error: updateError } = await supabase
+          .from('content')
+          .update(data)
+          .eq('id', contentId);
+
+        if (!updateError) {
+          setLastSaved(new Date());
+          setHasChanges(false);
+        }
+      } catch (err) {
+        // Тихая ошибка при автосохранении
+      } finally {
+        setAutoSaving(false);
+      }
+    };
+
+    const intervalId = setInterval(autoSave, 30000); // 30 секунд
+    return () => clearInterval(intervalId);
+  }, [title, slug, body, type, status, directionSlug, contentId, hasChanges, slugError]);
+
+  // Отслеживание изменений
+  useEffect(() => {
+    if (contentId === 'new') return;
+    setHasChanges(true);
+  }, [title, slug, body, type, status, directionSlug]);
+
   if (loading) {
     return (
       <main className="max-w-4xl mx-auto px-6 py-12">
@@ -210,15 +250,10 @@ export default function EditContentPage() {
   return (
     <main className="max-w-4xl mx-auto px-6 py-12">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-semibold">
-          {contentId === 'new' ? 'Создать материал' : 'Редактировать материал'}
-        </h1>
-        <button
-          onClick={() => router.back()}
-          className="px-4 py-2 rounded-xl border border-white/20 text-white/80 hover:text-white"
-        >
-          Отмена
-        </button>
+        <div>
+          <h1 className="text-3xl font-semibold">
+            {contentId === 'new' ? 'Создать материал' : 'Редактировать материал'}
+          </h1>
       </div>
 
       {error && (
