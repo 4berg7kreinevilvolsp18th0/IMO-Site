@@ -34,12 +34,16 @@ export async function POST(request: NextRequest) {
     const key = `login:${ip}:${email ? email.substring(0, 3) : 'unknown'}`;
     
     // 5 попыток в минуту
-    const limit = checkRateLimit(key, 5, 60000);
+    const limit = await checkRateLimitRedis(key, 5, 60);
     
     if (!limit.allowed) {
+      // Блокировать IP на 15 минут после превышения лимита
+      await blockIP(ip, 15 * 60);
+      
       return NextResponse.json(
         {
           allowed: false,
+          blocked: true,
           retryAfter: Math.ceil((limit.resetTime - Date.now()) / 1000),
         },
         {
@@ -57,6 +61,7 @@ export async function POST(request: NextRequest) {
       resetTime: limit.resetTime,
     });
   } catch (error: any) {
+    // Не раскрывать детали ошибки
     return NextResponse.json(
       { error: 'Failed to check rate limit' },
       { status: 500 }
