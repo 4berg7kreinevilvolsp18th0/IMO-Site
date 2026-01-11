@@ -32,3 +32,4 @@ export function determineCabinetType(roles: UserRoleWithDirection[]): CabinetTyp
 }
 
 /**
+  const primaryRole = determineCabinetType(roles);
