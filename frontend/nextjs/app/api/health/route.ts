@@ -13,6 +13,8 @@ export async function GET() {
     return NextResponse.json({
       status: 'ok',
       timestamp: new Date().toISOString(),
+      version: process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0',
+      service: 'OSS DVFU Frontend',
       supabase: {
         configured: supabaseConfigured,
         url: supabaseUrl ? (supabaseUrl.substring(0, 20) + '...') : 'not set',
