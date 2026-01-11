@@ -495,6 +495,8 @@ def delete_content_endpoint(
     success = crud.delete_content(db, content_id)
     if not success:
         raise HTTPException(status_code=404, detail="Content not found")
+    # Invalidate cache
+    invalidate_content_cache(content_id=str(content_id))
 # ==================== Documents ====================
 
 @app.get("/api/documents", response_model=List[Document])
