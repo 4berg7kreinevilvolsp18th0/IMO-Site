@@ -176,6 +176,29 @@ export default function EditContentPage() {
         setSlugError('Ошибка при проверке slug');
       }
     };
+
+    const timeoutId = setTimeout(checkSlug, 500);
+    return () => clearTimeout(timeoutId);
+  }, [slug, contentId]);
+
+  // Автосохранение черновиков каждые 30 секунд
+  useEffect(() => {
+    if (contentId === 'new' || !hasChanges || status !== 'draft') return;
+
+    const autoSave = async () => {
+      if (!title.trim() || !slug.trim() || !body.trim()) return;
+      if (slugError) return; // Не сохраняем если есть ошибка slug
+
+      setAutoSaving(true);
+      try {
+        let directionId = null;
+        if (directionSlug) {
+          const { data: dirData } = await supabase
+            .from('directions')
+            .select('id')
+            .eq('slug', directionSlug)
+            .single();
+
   if (loading) {
     return (
       <main className="max-w-4xl mx-auto px-6 py-12">
