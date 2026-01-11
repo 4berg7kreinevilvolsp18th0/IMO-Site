@@ -3,23 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  }
-
-  async function submit() {
-    if (!validate()) return;
-
-    setIsSubmitting(true);
-    setErrors({});
-
-    try {
-      // Определяем тип контакта
-      const contactType = contact.trim().startsWith('@') ? 'telegram' : 'email';
-
-      // Получаем direction_id если выбрано направление
-      let directionId = null;
-      if (selectedDirection) {
         const { data: directionData, error: dirError } = await supabase
           .from('directions')
           .select('id')
