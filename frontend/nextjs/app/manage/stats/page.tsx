@@ -119,3 +119,22 @@ export default function ManageStatsPage() {
 
       // Проверяем, есть ли уже данные за сегодня (manual)
       const { data: existing } = await supabase
+        .from('statistics')
+        .select('id')
+        .eq('period', today)
+        .eq('source', 'manual')
+        .single();
+
+      if (existing) {
+        // Обновляем
+        const { error } = await supabase
+          .from('statistics')
+          .update({
+            data: statsData.data,
+            created_by: user.id,
+          })
+          .eq('id', existing.id);
+
+        if (error) throw error;
+        toast.success('Статистика обновлена');
+      } else {
