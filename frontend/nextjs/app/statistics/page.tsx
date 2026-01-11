@@ -23,13 +23,6 @@ export default function StatisticsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Вычисляем статистику напрямую из таблицы appeals
-        // За последние 90 дней
         const ninetyDaysAgo = new Date();
         ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
 
