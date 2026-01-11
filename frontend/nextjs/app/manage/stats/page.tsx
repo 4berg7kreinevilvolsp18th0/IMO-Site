@@ -138,3 +138,25 @@ export default function ManageStatsPage() {
         if (error) throw error;
         toast.success('Статистика обновлена');
       } else {
+        // Создаем новую
+        const { error } = await supabase
+          .from('statistics')
+          .insert(statsData);
+
+        if (error) throw error;
+        toast.success('Статистика сохранена');
+      }
+
+      // Перезагружаем данные
+      loadTodayStats();
+    } catch (error: any) {
+      console.error('Save stats error:', error);
+      toast.error(error.message || 'Ошибка при сохранении статистики');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <main className="max-w-4xl mx-auto px-6 py-12">
