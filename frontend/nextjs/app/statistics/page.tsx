@@ -53,24 +53,53 @@ export default function StatisticsPage() {
         return;
       }
 
-        (appeals || []).forEach((appeal: any) => {
-          const dirId = appeal.direction_id || 'other';
-          directionMap.set(dirId, (directionMap.get(dirId) || 0) + 1);
-        });
+      if (!stats || stats.length === 0) {
+        setError('Статистика пока недоступна. Данные будут загружены автоматически от бота или введены вручную.');
+        setLoading(false);
+        return;
+      }
 
-        const directionArray = Array.from(directionMap.entries()).map(([direction_id, total_count]) => ({
-          direction_id: direction_id === 'other' ? null : direction_id,
-          total_count,
-        }));
+      // Обрабатываем данные для графиков
+      const dailyMap = new Map<string, { created_count: number; closed_count: number }>();
+      
+      stats.forEach((stat: any) => {
+        const day = stat.period;
+        const data = stat.data;
+        if (!dailyMap.has(day)) {
+          dailyMap.set(day, { created_count: 0, closed_count: 0 });
+        }
+        const dayData = dailyMap.get(day)!;
+        dayData.created_count += data.created_today || 0;
+        dayData.closed_count += data.closed_today || 0;
+      });
 
-        const { data: d2 } = directionArray.length > 0 ? { data: directionArray } : { data: [] };
+      // Преобразуем в массив и сортируем
+      const dailyArray = Array.from(dailyMap.entries())
+        .map(([day, counts]) => ({
+          day,
+          created_count: counts.created_count,
+          closed_count: counts.closed_count,
+        }))
+        .sort((a, b) => a.day.localeCompare(b.day))
+        .slice(-90); // Последние 90 дней
 
-        // Получаем названия направлений
-        if (d2 && d2.length > 0) {
-          const directionIds = (d2 as any[]).map((d: any) => d.direction_id).filter(Boolean);
-          if (directionIds.length > 0) {
-            const { data: directions } = await supabase
-              .from('directions')
+      setDaily(dailyArray);
+
+      // Статистика по направлениям (из последней записи)
+      const latestStat = stats[stats.length - 1];
+      const byDirection = latestStat.data.by_direction || {};
+      
+      const directionArray = Object.entries(byDirection).map(([direction_id, total_count]) => ({
+        direction_id: direction_id === 'other' ? null : direction_id,
+        total_count: total_count as number,
+      }));
+
+      // Получаем названия направлений
+      if (directionArray.length > 0) {
+        const directionIds = directionArray.map((d: any) => d.direction_id).filter(Boolean);
+        if (directionIds.length > 0) {
+          const { data: directions } = await supabase
+            .from('directions')
               .select('id, title, slug')
               .in('id', directionIds);
 
