@@ -155,6 +155,27 @@ export default function EditContentPage() {
     }
 
     const checkSlug = async () => {
+      try {
+        const { data, error: checkError } = await supabase
+          .from('content')
+          .select('id')
+          .eq('slug', slug)
+          .maybeSingle();
+
+        if (checkError) {
+          setSlugError('Ошибка при проверке slug');
+          return;
+        }
+
+        if (data && data.id !== contentId) {
+          setSlugError('Этот slug уже используется');
+        } else {
+          setSlugError(null);
+        }
+      } catch (err) {
+        setSlugError('Ошибка при проверке slug');
+      }
+    };
   if (loading) {
     return (
       <main className="max-w-4xl mx-auto px-6 py-12">
