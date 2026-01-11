@@ -160,3 +160,130 @@ export default function ManageStatsPage() {
   if (loading) {
     return (
       <main className="max-w-4xl mx-auto px-6 py-12">
+        <div className="text-center text-white/50">Загрузка...</div>
+      </main>
+    );
+  }
+
+  if (!authorized) {
+    return null;
+  }
+
+  return (
+    <main className="max-w-4xl mx-auto px-6 py-12">
+      <div className="mb-8">
+        <h1 className="text-3xl font-semibold mb-2">Ввод статистики</h1>
+        <p className="text-white/70">
+          Введите статистику обращений за сегодня. Данные будут отображаться на сайте.
+        </p>
+      </div>
+
+      <div className="space-y-6">
+        <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+          <h2 className="text-xl font-semibold mb-4">Общая статистика</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Всего обращений <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="number"
+                value={total}
+                onChange={(e) => setTotal(e.target.value)}
+                className="w-full rounded-xl bg-white/10 p-3 border border-white/20 text-white"
+                placeholder="0"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Создано сегодня
+              </label>
+              <input
+                type="number"
+                value={createdToday}
+                onChange={(e) => setCreatedToday(e.target.value)}
+                className="w-full rounded-xl bg-white/10 p-3 border border-white/20 text-white"
+                placeholder="0"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Закрыто сегодня
+              </label>
+              <input
+                type="number"
+                value={closedToday}
+                onChange={(e) => setClosedToday(e.target.value)}
+                className="w-full rounded-xl bg-white/10 p-3 border border-white/20 text-white"
+                placeholder="0"
+                min="0"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-white/10 bg-white/5 p-6">
+          <h2 className="text-xl font-semibold mb-4">По статусам</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Новые <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="number"
+                value={newCount}
+                onChange={(e) => setNewCount(e.target.value)}
+                className="w-full rounded-xl bg-white/10 p-3 border border-white/20 text-white"
+                placeholder="0"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                В работе <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="number"
+                value={inProgress}
+                onChange={(e) => setInProgress(e.target.value)}
+                className="w-full rounded-xl bg-white/10 p-3 border border-white/20 text-white"
+                placeholder="0"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Ожидание <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="number"
+                value={waiting}
+                onChange={(e) => setWaiting(e.target.value)}
+                className="w-full rounded-xl bg-white/10 p-3 border border-white/20 text-white"
+                placeholder="0"
+                min="0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Закрыто <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="number"
+                value={closed}
+                onChange={(e) => setClosed(e.target.value)}
+                className="w-full rounded-xl bg-white/10 p-3 border border-white/20 text-white"
+                placeholder="0"
+                min="0"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex gap-4">
+          <button
+            onClick={saveStats}
+            disabled={saving}
+            className="px-6 py-3 rounded-xl bg-oss-red font-semibold hover:bg-oss-red/90 transition disabled:opacity-50"
