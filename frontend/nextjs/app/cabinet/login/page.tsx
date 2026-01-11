@@ -98,3 +98,28 @@ export default function CabinetLoginPage() {
               required
               className="w-full rounded-xl bg-white/10 p-3 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-oss-red focus:border-transparent"
               placeholder="••••••••"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full rounded-xl bg-oss-red px-6 py-3 font-semibold hover:bg-oss-red/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? 'Вход...' : 'Войти'}
+          </button>
+        </form>
+
+        <div className="mt-6 text-center text-sm text-white/60 light:text-gray-500">
+          <p>
+            Нет доступа?{' '}
+            <Link href="/" className="text-oss-red hover:underline">
+              Вернуться на главную
+            </Link>
+          </p>
+        </div>
+      </div>
+    </main>
+  );
+}
+
