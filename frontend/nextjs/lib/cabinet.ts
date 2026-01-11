@@ -69,3 +69,24 @@ export async function getUserCabinetInfo(): Promise<UserCabinetInfo | null> {
 }
 
 /**
+ * Получить URL кабинета для редиректа
+ */
+export function getCabinetUrl(cabinetType: CabinetType): string {
+  if (!cabinetType) return '/cabinet/login';
+  
+  return `/cabinet/${cabinetType}`;
+}
+
+/**
+ * Проверить доступ к разделу кабинета
+ */
+export function hasCabinetAccess(
+  cabinetType: CabinetType,
+  requiredRole: UserRole | UserRole[]
+): boolean {
+  if (!cabinetType) return false;
+
+  const requiredRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
+  
+  // Board и staff имеют доступ ко всем кабинетам
+  if (cabinetType === 'board' || cabinetType === 'staff') {
