@@ -60,3 +60,22 @@ export default function ManageStatsPage() {
   async function loadTodayStats() {
     try {
       const today = new Date().toISOString().split('T')[0];
+      const { data } = await supabase
+        .from('statistics')
+        .select('*')
+        .eq('period', today)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (data && data.data) {
+        const stats = data.data;
+        setTotal(String(stats.total || ''));
+        setNewCount(String(stats.by_status?.new || ''));
+        setInProgress(String(stats.by_status?.in_progress || ''));
+        setWaiting(String(stats.by_status?.waiting || ''));
+        setClosed(String(stats.by_status?.closed || ''));
+        setCreatedToday(String(stats.created_today || ''));
+        setClosedToday(String(stats.closed_today || ''));
+      }
+    } catch (error) {
