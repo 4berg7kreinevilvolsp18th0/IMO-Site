@@ -29,16 +29,6 @@ export default function StatisticsPage() {
     return () => clearInterval(interval);
   }, []);
 
-          dayData.created_count += 1;
-
-          if (appeal.status === 'closed' && appeal.closed_at) {
-            const closedDate = new Date(appeal.closed_at).toISOString().split('T')[0];
-            if (!dailyMap.has(closedDate)) {
-              dailyMap.set(closedDate, { created_count: 0, closed_count: 0 });
-            }
-            dailyMap.get(closedDate)!.closed_count += 1;
-          }
-        });
 
         // Преобразуем в массив и сортируем
         const dailyArray = Array.from(dailyMap.entries())
