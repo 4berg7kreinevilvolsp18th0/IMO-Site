@@ -120,7 +120,11 @@ export default function EditContentPage() {
       }
 
       toast.success(contentId === 'new' ? 'Материал создан' : 'Материал сохранён');
-      router.push('/admin/content');
+      setHasChanges(false);
+      setLastSaved(new Date());
+      if (contentId === 'new') {
+        router.push('/admin/content');
+      }
     } catch (err: any) {
       const errorMessage = err.message || 'Ошибка при сохранении';
       setError(errorMessage);
@@ -143,6 +147,14 @@ export default function EditContentPage() {
     }
   }, [title, contentId, slug]);
 
+  // Проверка уникальности slug
+  useEffect(() => {
+    if (!slug || slug.length < 3) {
+      setSlugError(null);
+      return;
+    }
+
+    const checkSlug = async () => {
   if (loading) {
     return (
       <main className="max-w-4xl mx-auto px-6 py-12">
