@@ -497,6 +497,9 @@ def delete_content_endpoint(
         raise HTTPException(status_code=404, detail="Content not found")
     # Invalidate cache
     invalidate_content_cache(content_id=str(content_id))
+    return None
+
+
 # ==================== Documents ====================
 
 @app.get("/api/documents", response_model=List[Document])
