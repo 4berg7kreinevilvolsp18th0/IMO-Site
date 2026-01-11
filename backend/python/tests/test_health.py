@@ -22,3 +22,17 @@ def test_detailed_health_check(client):
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
     assert "status" in data
+    assert "checks" in data
+    assert "database" in data["checks"]
+    # Database should be available in tests
+    assert data["checks"]["database"] is True
+
+
+def test_metrics_endpoint(client):
+    """Test metrics endpoint"""
+    response = client.get("/metrics")
+    assert response.status_code == status.HTTP_200_OK
+    assert "timestamp" in data
+    assert "total_requests" in data
+    assert "error_rate" in data
+    assert "top_endpoints" in data
