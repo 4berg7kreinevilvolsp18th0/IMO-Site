@@ -46,3 +46,17 @@ export default function ManageStatsPage() {
         router.push('/manage');
         return;
       }
+
+      setAuthorized(true);
+      loadTodayStats();
+    } catch (error) {
+      console.error('Auth check error:', error);
+      router.push('/manage/login');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function loadTodayStats() {
+    try {
+      const today = new Date().toISOString().split('T')[0];
