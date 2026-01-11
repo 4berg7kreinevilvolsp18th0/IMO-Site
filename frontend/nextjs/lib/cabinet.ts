@@ -32,4 +32,17 @@ export function determineCabinetType(roles: UserRoleWithDirection[]): CabinetTyp
 }
 
 /**
+ * Получить информацию о кабинете пользователя
+ */
+export async function getUserCabinetInfo(): Promise<UserCabinetInfo | null> {
+  const { user, error } = await getCurrentUser();
+  if (!user || error) return null;
+
+  const roles = await getUserRoles();
+  if (roles.length === 0) return null;
+
   const primaryRole = determineCabinetType(roles);
+  const cabinetType = primaryRole;
+
+  // Получаем направления для ролей с direction_id
+  const directionIds = roles
