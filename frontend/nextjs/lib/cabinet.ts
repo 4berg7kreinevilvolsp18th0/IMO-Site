@@ -150,3 +150,84 @@ export function getAvailableSections(cabinetType: CabinetType): Array<{
         },
         {
           title: 'Контент',
+          href: '/cabinet/content',
+          description: 'Управление новостями и гайдами',
+          icon: '📰',
+        },
+        {
+          title: 'Дашборды',
+          href: '/cabinet/dashboards',
+          description: 'Аналитика по направлению',
+          icon: '📈',
+        },
+      ];
+
+    case 'board':
+      return [
+        ...baseSections,
+        {
+          title: 'Статистика',
+          href: '/cabinet/stats',
+          description: 'Ввод и просмотр статистики',
+          icon: '📊',
+        },
+        {
+          title: 'Обращения',
+          href: '/cabinet/appeals',
+          description: 'Управление всеми обращениями',
+          icon: '📝',
+        },
+        {
+          title: 'Контент',
+          href: '/cabinet/content',
+          description: 'Управление всем контентом',
+          icon: '📰',
+        },
+        {
+          title: 'Дашборды',
+          href: '/cabinet/dashboards',
+          description: 'Полная аналитика',
+          icon: '📈',
+        },
+        {
+          title: 'Пользователи',
+          href: '/cabinet/users',
+          description: 'Управление ролями пользователей',
+          icon: '👥',
+        },
+        {
+          title: 'Настройки',
+          href: '/cabinet/settings',
+          description: 'Системные настройки',
+          icon: '⚙️',
+        },
+      ];
+
+    case 'staff':
+      return [
+        ...baseSections,
+        {
+          title: 'Обращения',
+          href: '/cabinet/appeals',
+          description: 'Просмотр всех обращений',
+          icon: '📝',
+        },
+        {
+          title: 'Дашборды',
+          href: '/cabinet/dashboards',
+          description: 'Просмотр аналитики',
+          icon: '📈',
+        },
+        {
+          title: 'Настройки',
+          href: '/cabinet/settings',
+          description: 'Технические настройки',
+          icon: '⚙️',
+        },
+      ];
+
+    default:
+      return baseSections;
+  }
+}
+
