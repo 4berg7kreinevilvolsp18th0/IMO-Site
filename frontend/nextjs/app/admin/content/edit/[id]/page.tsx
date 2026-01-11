@@ -23,7 +23,11 @@ export default function EditContentPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [showPreview, setShowPreview] = useState(false);
+  const [showPreview, setShowPreview] = useState<'preview' | 'split' | false>(false);
+  const [slugError, setSlugError] = useState<string | null>(null);
+  const [autoSaving, setAutoSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
     if (contentId === 'new') {
@@ -65,6 +69,11 @@ export default function EditContentPage() {
   async function save() {
     if (!title.trim() || !slug.trim() || !body.trim()) {
       setError('Заполните все обязательные поля');
+      return;
+    }
+
+    if (slugError) {
+      setError('Исправьте ошибку в slug перед сохранением');
       return;
     }
 
