@@ -5,3 +5,8 @@
               <p>Для назначения ролей используйте SQL запросы в Supabase:</p>
               </pre>
             </div>
+      </main>
+    </CabinetGuard>
+  );
+}
+
