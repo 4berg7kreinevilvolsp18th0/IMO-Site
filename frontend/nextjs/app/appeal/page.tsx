@@ -3,287 +3,48 @@
 import React from 'react';
 import Link from 'next/link';
 
-        const { data: directionData, error: dirError } = await supabase
-          .from('directions')
-          .select('id')
-          .eq('slug', selectedDirection)
-          .eq('is_active', true)
-          .single();
-
-        if (!dirError && directionData) {
-          directionId = directionData.id;
-        }
-      }
-
-      const { data, error } = await supabase
-        .from('appeals')
-        .insert({
-          title: title.trim(),
-          description: description.trim(),
-          contact_value: contact.trim(),
-          contact_type: contactType,
-          direction_id: directionId,
-          institute: selectedSchool || null,
-          is_anonymous: isAnonymous,
-        })
-        .select('id, public_token')
-        .single();
-
-      if (error) {
-        setErrors({ submit: error.message || 'Ошибка при отправке обращения. Попробуйте позже.' });
-        setIsSubmitting(false);
-        return;
-      }
-
-      if (data && 'id' in data) {
-        const appealId = data.id as string;
-        
-        // Загружаем файлы, если они есть
-        if (files.length > 0 && appealId) {
-          setUploadingFiles(true);
-          try {
-            for (const file of files) {
-              const formData = new FormData();
-              formData.append('file', file);
-              formData.append('appealId', appealId);
-
-              const uploadResponse = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData,
-              });
-
-              if (!uploadResponse.ok) {
-                console.warn('Не удалось загрузить файл:', file.name);
-                // Продолжаем, даже если файл не загрузился
-              }
-            }
-          } catch (uploadError) {
-            console.error('Ошибка загрузки файлов:', uploadError);
-            // Не блокируем успешную отправку обращения
-          } finally {
-            setUploadingFiles(false);
-          }
-        }
-
-        setSubmittedToken(data.public_token);
-      }
-    } catch (err) {
-      setErrors({ submit: 'Произошла ошибка. Попробуйте позже.' });
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
-
-  if (submittedToken) {
-    return (
-      <main className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
-        <div className="rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 text-center light:bg-white light:border-gray-200 light:shadow-sm">
-          <h1 className="text-2xl sm:text-3xl font-semibold light:text-gray-900">Обращение принято</h1>
-          <p className="mt-4 text-sm sm:text-base text-white/70 light:text-gray-600">
-            Ваше обращение зарегистрировано. Сохраните код для проверки статуса:
-          </p>
-          <code className="mt-6 block rounded-xl bg-oss-dark border border-white/20 p-4 text-sm sm:text-lg font-mono break-all light:bg-gray-100 light:border-gray-300 light:text-gray-900">
-            {submittedToken}
-          </code>
-          <p className="mt-4 text-xs sm:text-sm text-white/60 light:text-gray-500">
-            Вы можете проверить статус на странице{' '}
-            <a href="/appeal/status" className="underline text-oss-red hover:text-oss-red/80">
-              проверки статуса
-            </a>
-          </p>
-        </div>
-      </main>
-    );
-  }
-
-  const selectedDirectionObj = DIRECTIONS.find((d) => d.slug === selectedDirection);
+export default function AppealPage() {
+  const botUrl = process.env.NEXT_PUBLIC_TELEGRAM_BOT_URL || 'https://t.me/oss_dvfu_bot';
 
   return (
-    <main className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12 md:py-16">
-      <h1 className="text-2xl sm:text-3xl font-semibold light:text-gray-900">Подать обращение</h1>
-      <p className="mt-3 text-sm sm:text-base text-white/70 light:text-gray-600">
-        Опишите проблему — мы направим её в нужный комитет.
-      </p>
-
-      <div className="mt-6 sm:mt-8 space-y-4 sm:space-y-5">
-        {presetDirection && selectedDirectionObj && (
-          <div className="rounded-xl border border-white/20 bg-white/5 p-4 light:bg-white light:border-gray-200 light:shadow-sm">
-            <div className="text-xs sm:text-sm text-white/60 light:text-gray-500">Направление</div>
-            <div className="mt-1 font-medium text-sm sm:text-base light:text-gray-900">{selectedDirectionObj.title}</div>
-          </div>
-        )}
-
-        {!presetDirection && (
-          <div>
-            <label className="block text-xs sm:text-sm font-medium mb-2 light:text-gray-700">Направление (опционально)</label>
-            <select
-              className="w-full rounded-xl bg-white/10 p-3 border border-white/20 text-sm sm:text-base light:bg-white light:border-gray-300 light:text-gray-900"
-              value={selectedDirection}
-              onChange={(e) => setSelectedDirection(e.target.value)}
-            >
-              <option value="">Не знаю / Другое</option>
-              {DIRECTIONS.map((d) => (
-                <option key={d.slug} value={d.slug}>
-                  {d.title}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-
-        <div>
-          <label className="block text-xs sm:text-sm font-medium mb-2 light:text-gray-700">
-            Школа / Институт <span className="text-oss-red">*</span>
-          </label>
-          <div className="relative group">
-            <select
-              className={`w-full rounded-xl bg-white/10 p-3 pr-10 border text-sm sm:text-base appearance-none cursor-pointer transition-all ${
-                errors.school
-                  ? 'border-red-500'
-                  : 'border-white/20 hover:border-oss-red/50 focus:border-oss-red group-hover:border-oss-red/50'
-              } light:bg-white light:border-gray-300 light:text-gray-900 focus:outline-none focus:ring-2 focus:ring-oss-red/20`}
-              value={selectedSchool}
-              onChange={(e) => {
-                setSelectedSchool(e.target.value);
-                if (errors.school) setErrors({ ...errors, school: '' });
-              }}
-            >
-              <option value="" className="text-gray-500">Выберите школу или институт</option>
-              {SCHOOLS.map((school) => (
-                <option key={school.code} value={school.code} className="text-white light:text-gray-900">
-                  {school.shortName} — {school.fullName}
-                </option>
-              ))}
-            </select>
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none transition-transform group-hover:translate-y-[-2px]">
-              <svg
-                className="w-5 h-5 text-white/60 group-hover:text-oss-red light:text-gray-500 light:group-hover:text-oss-red transition-colors"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          </div>
-          {errors.school && (
-            <p className="mt-1 text-xs sm:text-sm text-red-400 light:text-red-600">{errors.school}</p>
-          )}
-          {selectedSchool && (
-            <div className="mt-2 rounded-lg bg-oss-red/10 border border-oss-red/30 p-2.5 text-xs sm:text-sm text-oss-red/90 light:bg-red-50 light:border-red-200 light:text-red-700 animate-in fade-in slide-in-from-top-2 duration-200">
-              <span className="font-semibold">✓ Выбрано: </span>
-              {SCHOOLS.find((s) => s.code === selectedSchool)?.fullName}
-            </div>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-xs sm:text-sm font-medium mb-2 light:text-gray-700">
-            Краткая тема <span className="text-red-400">*</span>
-          </label>
-          <input
-            className={`w-full rounded-xl bg-white/10 p-3 border text-sm sm:text-base ${
-              errors.title ? 'border-red-500' : 'border-white/20'
-            } light:bg-white light:border-gray-300 light:text-gray-900`}
-            placeholder="Например: Не пришла стипендия"
-            value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-              if (errors.title) setErrors({ ...errors, title: '' });
-            }}
-          />
-          {errors.title && <p className="mt-1 text-xs sm:text-sm text-red-400">{errors.title}</p>}
-        </div>
-
-        <div>
-          <label className="block text-xs sm:text-sm font-medium mb-2 light:text-gray-700">
-            Описание ситуации <span className="text-red-400">*</span>
-          </label>
-          <textarea
-            className={`w-full rounded-xl bg-white/10 p-3 h-32 border text-sm sm:text-base resize-y ${
-              errors.description ? 'border-red-500' : 'border-white/20'
-            } light:bg-white light:border-gray-300 light:text-gray-900`}
-            placeholder="Опишите подробно вашу ситуацию, что произошло, когда, какие документы есть..."
-            value={description}
-            onChange={(e) => {
-              setDescription(e.target.value);
-              if (errors.description) setErrors({ ...errors, description: '' });
-            }}
-          />
-          {errors.description && <p className="mt-1 text-xs sm:text-sm text-red-400">{errors.description}</p>}
-          <p className="mt-1 text-xs text-white/50 light:text-gray-500">Минимум 20 символов</p>
-        </div>
-
-        <div>
-          <label className="block text-xs sm:text-sm font-medium mb-2 light:text-gray-700">
-            Контакт для связи <span className="text-red-400">*</span>
-          </label>
-          <input
-            className={`w-full rounded-xl bg-white/10 p-3 border text-sm sm:text-base ${
-              errors.contact ? 'border-red-500' : 'border-white/20'
-            } light:bg-white light:border-gray-300 light:text-gray-900`}
-            placeholder="email@example.com или @telegram_username"
-            value={contact}
-            onChange={(e) => {
-              setContact(e.target.value);
-              if (errors.contact) setErrors({ ...errors, contact: '' });
-            }}
-          />
-          {errors.contact && <p className="mt-1 text-xs sm:text-sm text-red-400">{errors.contact}</p>}
-          <p className="mt-1 text-xs text-white/50 light:text-gray-500">Email или Telegram (@username)</p>
-        </div>
-
-        <FileUpload
-          onFilesChange={setFiles}
-          maxFiles={5}
-          maxSizeMB={10}
-          disabled={isSubmitting || uploadingFiles}
-        />
-
-        <div className="flex items-center gap-3">
-          <input
-            type="checkbox"
-            id="anonymous"
-            checked={isAnonymous}
-            onChange={(e) => setIsAnonymous(e.target.checked)}
-            className="w-5 h-5 rounded border-white/20 bg-white/10 light:border-gray-300 light:bg-white"
-          />
-          <label htmlFor="anonymous" className="text-xs sm:text-sm text-white/80 light:text-gray-700">
-            Подать анонимно
-          </label>
-        </div>
-        {isAnonymous && (
-          <p className="text-xs text-white/60 -mt-3 light:text-gray-500">
-            Примечание: анонимные обращения сложнее обрабатывать, так как мы не сможем уточнить детали напрямую.
+    <main className="min-h-screen bg-oss-dark light:bg-gray-50 text-white light:text-gray-900 flex items-center justify-center px-4">
+      <div className="max-w-2xl w-full text-center">
+        <div className="mb-8">
+          <h1 className="text-3xl font-semibold mb-4">Обращения через Telegram бот</h1>
+          <p className="text-white/70 light:text-gray-600 mb-6">
+            Все обращения теперь принимаются через единый Telegram бот для удобства и оперативности.
           </p>
-        )}
-
-        {errors.submit && (
-          <div className="rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-xs sm:text-sm text-red-400 light:bg-red-50 light:border-red-200 light:text-red-700">
-            {errors.submit}
-          </div>
-        )}
-
-        <button
-          onClick={submit}
-          disabled={isSubmitting || uploadingFiles}
-          className="w-full rounded-xl bg-oss-red py-3 font-semibold hover:bg-oss-red/90 transition disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-        >
-          {uploadingFiles ? 'Загрузка файлов...' : isSubmitting ? 'Отправка...' : 'Отправить обращение'}
-        </button>
+        </div>
+        
+        <div className="space-y-4">
+          <a
+            href={botUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-8 py-4 rounded-xl bg-oss-red font-semibold hover:bg-oss-red/90 transition
+              light:shadow-[0_4px_12px_rgba(209,31,42,0.25)] light:hover:shadow-[0_8px_24px_rgba(209,31,42,0.35)]
+              flex items-center justify-center gap-3 mx-auto"
+          >
+            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.169 0-.315.06-.459.19l-1.15.956-2.22 1.851c-.09.08-.18.15-.27.22-.09.07-.18.13-.27.18-.09.05-.18.09-.27.12-.09.03-.18.05-.27.05-.09 0-.18-.02-.27-.05-.09-.03-.18-.07-.27-.12-.09-.05-.18-.11-.27-.18-.09-.07-.18-.14-.27-.22l-2.22-1.851-1.15-.956c-.144-.13-.29-.19-.459-.19-.169 0-.315.06-.459.19-.144.13-.229.31-.229.52 0 .21.085.39.229.52l1.15.956 2.22 1.851c.09.08.18.15.27.22.09.07.18.13.27.18.09.05.18.09.27.12.09.03.18.05.27.05.09 0 .18-.02.27-.05.09-.03.18-.07.27-.12.09-.05.18-.11.27-.18.09-.07.18-.14.27-.22l2.22-1.851 1.15-.956c.144-.13.229-.31.229-.52 0-.21-.085-.39-.229-.52-.144-.13-.29-.19-.459-.19z"/>
+            </svg>
+            Открыть Telegram бот
+          </a>
+          
+          <Link
+            href="/appeal/status"
+            className="inline-block px-6 py-3 rounded-xl border border-white/20 text-white/80 hover:text-white transition
+              light:bg-white light:border-2 light:border-gray-300 light:text-gray-900 
+              light:hover:bg-gray-50 light:hover:border-oss-red/40 light:hover:text-oss-red"
+          >
+            Проверить статус обращения
+          </Link>
+        </div>
+        
+        <div className="mt-8 text-sm text-white/60 light:text-gray-500">
+          <p>Статистика обращений доступна на странице <Link href="/statistics" className="text-oss-red hover:underline">Статистика</Link></p>
+        </div>
       </div>
     </main>
-  );
-}
-
-export default function AppealPage() {
-  return (
-    <Suspense fallback={
-      <main className="max-w-3xl mx-auto px-6 py-12">
-        <div className="text-center text-white/50">Загрузка...</div>
-      </main>
-    }>
-      <AppealPageContent />
-    </Suspense>
   );
 }
