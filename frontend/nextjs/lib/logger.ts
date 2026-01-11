@@ -21,3 +21,21 @@ export const logger = {
     }
   },
 
+   * Логирование предупреждений
+   */
+  warn: (message: string, ...args: any[]) => {
+    if (isDevelopment) {
+      if (typeof window !== 'undefined') {
+        console.warn(`[WARN] ${message}`, ...args);
+      } else {
+        console.warn(`[WARN] ${message}`, ...args);
+      }
+    }
+  },
+
+  /**
+   * Логирование информации (только в development)
+   */
+  info: (message: string, ...args: any[]) => {
+    if (isDevelopment) {
+      if (typeof window !== 'undefined') {
