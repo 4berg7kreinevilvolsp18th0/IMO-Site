@@ -23,21 +23,11 @@ export default function StatisticsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-        const ninetyDaysAgo = new Date();
-        ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
-
-        // Получаем все обращения за последние 90 дней
-        const { data: appeals, error: appealsError } = await supabase
-          .from('appeals')
-          .select('id, created_at, closed_at, direction_id, status')
-          .gte('created_at', ninetyDaysAgo.toISOString())
-          .order('created_at', { ascending: true });
-
-        if (appealsError) {
-          console.error('Ошибка загрузки обращений:', appealsError);
-          setError('Не удалось загрузить статистику');
-          return;
-        }
+    loadStats();
+    // Автообновление каждые 5 минут
+    const interval = setInterval(loadStats, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
         // Группируем по дням
         const dailyMap = new Map<string, { created_count: number; closed_count: number }>();
