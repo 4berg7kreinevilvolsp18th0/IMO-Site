@@ -249,6 +249,17 @@ def update_content(db: Session, content_id: UUID, content_update: ContentUpdate)
     return db_content
 
 
+def delete_content(db: Session, content_id: UUID) -> bool:
+    """Delete content by ID"""
+    db_content = get_content(db, content_id)
+    if not db_content:
+        return False
+    
+    db.delete(db_content)
+    db.commit()
+    return True
+
+
 # Document CRUD
 def get_documents(
     db: Session,
