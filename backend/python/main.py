@@ -494,6 +494,7 @@ def delete_content_endpoint(
     """Delete content (admin endpoint)"""
     success = crud.delete_content(db, content_id)
     if not success:
+        raise HTTPException(status_code=404, detail="Content not found")
 # ==================== Documents ====================
 
 @app.get("/api/documents", response_model=List[Document])
