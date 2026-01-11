@@ -254,6 +254,23 @@ export default function EditContentPage() {
           <h1 className="text-3xl font-semibold">
             {contentId === 'new' ? 'Создать материал' : 'Редактировать материал'}
           </h1>
+          {lastSaved && (
+            <p className="mt-1 text-sm text-white/50">
+              Автосохранено: {lastSaved.toLocaleTimeString('ru-RU')}
+            </p>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
+          {autoSaving && (
+            <span className="text-sm text-white/50">Автосохранение...</span>
+          )}
+          <button
+            onClick={() => router.back()}
+            className="px-4 py-2 rounded-xl border border-white/20 text-white/80 hover:text-white"
+          >
+            Отмена
+          </button>
+        </div>
       </div>
 
       {error && (
@@ -334,12 +351,20 @@ export default function EditContentPage() {
             type="text"
             value={slug}
             onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-'))}
-            className="w-full rounded-xl bg-white/10 p-3 border border-white/20 text-white font-mono"
+            className={`w-full rounded-xl bg-white/10 p-3 border font-mono ${
+              slugError
+                ? 'border-red-500/40 text-red-400'
+                : 'border-white/20 text-white'
+            }`}
             placeholder="url-slug"
           />
-          <p className="mt-1 text-xs text-white/50">
-            Используется в URL. Автоматически генерируется из заголовка, можно изменить вручную.
-          </p>
+          {slugError ? (
+            <p className="mt-1 text-xs text-red-400">{slugError}</p>
+          ) : (
+            <p className="mt-1 text-xs text-white/50">
+              Используется в URL. Автоматически генерируется из заголовка, можно изменить вручную.
+            </p>
+          )}
         </div>
 
         <div>
@@ -347,15 +372,43 @@ export default function EditContentPage() {
             <label className="block text-sm font-medium">
               Содержание (Markdown) <span className="text-red-400">*</span>
             </label>
-            <button
-              type="button"
-              onClick={() => setShowPreview(!showPreview)}
-              className="px-3 py-1.5 rounded-lg border border-white/20 text-sm text-white/80 hover:text-white hover:border-white/40 transition"
-            >
-              {showPreview ? 'Редактировать' : 'Предпросмотр'}
-            </button>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setShowPreview('preview')}
+                className={`px-3 py-1.5 rounded-lg border text-sm transition ${
+                  showPreview === 'preview'
+                    ? 'border-oss-red bg-oss-red/20 text-white'
+                    : 'border-white/20 text-white/80 hover:text-white hover:border-white/40'
+                }`}
+              >
+                Предпросмотр
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowPreview('split')}
+                className={`px-3 py-1.5 rounded-lg border text-sm transition ${
+                  showPreview === 'split'
+                    ? 'border-oss-red bg-oss-red/20 text-white'
+                    : 'border-white/20 text-white/80 hover:text-white hover:border-white/40'
+                }`}
+              >
+                Раздельно
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowPreview(false)}
+                className={`px-3 py-1.5 rounded-lg border text-sm transition ${
+                  !showPreview
+                    ? 'border-oss-red bg-oss-red/20 text-white'
+                    : 'border-white/20 text-white/80 hover:text-white hover:border-white/40'
+                }`}
+              >
+                Редактировать
+              </button>
+            </div>
           </div>
-          {showPreview ? (
+          {showPreview === 'preview' ? (
             <div className="w-full rounded-xl bg-white/10 p-6 border border-white/20 min-h-[400px] max-h-[600px] overflow-y-auto markdown-content">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
@@ -409,6 +462,20 @@ export default function EditContentPage() {
                 {body || '*Начните вводить текст...*'}
               </ReactMarkdown>
             </div>
+          ) : showPreview === 'split' ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs text-white/50 mb-2">Редактирование</label>
+                <textarea
+                  value={body}
+                  onChange={(e) => setBody(e.target.value)}
+                  className="w-full rounded-xl bg-white/10 p-3 border border-white/20 text-white font-mono h-96"
+                  placeholder="Введите текст в формате Markdown..."
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-white/50 mb-2">Предпросмотр</label>
+                <div className="w-full rounded-xl bg-white/10 p-6 border border-white/20 min-h-[400px] max-h-[600px] overflow-y-auto markdown-content">
           ) : (
             <>
               <textarea
