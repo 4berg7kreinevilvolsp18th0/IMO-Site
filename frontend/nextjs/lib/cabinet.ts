@@ -90,3 +90,31 @@ export function hasCabinetAccess(
   
   // Board и staff имеют доступ ко всем кабинетам
   if (cabinetType === 'board' || cabinetType === 'staff') {
+    return true;
+  }
+
+  // Проверяем соответствие роли
+  return requiredRoles.includes(cabinetType);
+}
+
+/**
+ * Получить список доступных разделов для роли
+ */
+export function getAvailableSections(cabinetType: CabinetType): Array<{
+  title: string;
+  href: string;
+  description: string;
+  icon?: string;
+}> {
+  const baseSections = [
+    {
+      title: 'Профиль',
+      href: '/cabinet/profile',
+      description: 'Личные данные и настройки',
+      icon: '👤',
+    },
+  ];
+
+  switch (cabinetType) {
+    case 'member':
+      return [
