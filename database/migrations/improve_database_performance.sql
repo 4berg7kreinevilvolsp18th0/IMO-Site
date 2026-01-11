@@ -288,6 +288,107 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- 5. Валидация на уровне БД
 -- ===============================
 
+-- Функция для валидации email
+CREATE OR REPLACE FUNCTION is_valid_email(email TEXT)
+RETURNS BOOLEAN AS $$
+BEGIN
+    RETURN email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$';
+END;
+$$ LANGUAGE plpgsql IMMUTABLE;
+
+-- Функция для валидации URL
+CREATE OR REPLACE FUNCTION is_valid_url(url TEXT)
+RETURNS BOOLEAN AS $$
+BEGIN
+    RETURN url ~* '^https?://[^\s/$.?#].[^\s]*$';
+END;
+$$ LANGUAGE plpgsql IMMUTABLE;
+
+-- Добавить проверки для student_organizations
+ALTER TABLE student_organizations
+ADD CONSTRAINT check_email_format 
+CHECK (email IS NULL OR is_valid_email(email));
+
+ALTER TABLE student_organizations
+ADD CONSTRAINT check_website_url_format 
+CHECK (website_url IS NULL OR is_valid_url(website_url));
+
+ALTER TABLE student_organizations
+ADD CONSTRAINT check_telegram_url_format 
+CHECK (telegram_url IS NULL OR telegram_url ~* '^https?://(t\.me|telegram\.me)/');
+
+ALTER TABLE student_organizations
+ADD CONSTRAINT check_vk_url_format 
+CHECK (vk_url IS NULL OR vk_url ~* '^https?://(vk\.com|vkontakte\.ru)/');
+
+-- Проверка для appeals
+ALTER TABLE appeals
+ADD CONSTRAINT check_contact_email_format 
+CHECK (contact_type != 'email' OR contact_value IS NULL OR is_valid_email(contact_value));
+
+-- Проверка для content (slug должен быть валидным)
+ALTER TABLE content
+ADD CONSTRAINT check_slug_format 
+CHECK (slug ~* '^[a-z0-9]+(?:-[a-z0-9]+)*$');
+
+-- ===============================
+-- 6. Материализованные представления для аналитики
+-- ===============================
+
+-- Материализованное представление для статистики обращений по направлениям
+CREATE MATERIALIZED VIEW IF NOT EXISTS appeals_stats_by_direction AS
+SELECT 
+    d.id AS direction_id,
+    d.title AS direction_title,
+    COUNT(a.id) AS total_appeals,
+    COUNT(CASE WHEN a.status = 'new' THEN 1 END) AS new_appeals,
+    COUNT(CASE WHEN a.status = 'in_progress' THEN 1 END) AS in_progress_appeals,
+    COUNT(CASE WHEN a.status = 'waiting' THEN 1 END) AS waiting_appeals,
+    COUNT(CASE WHEN a.status = 'closed' THEN 1 END) AS closed_appeals,
+    COUNT(CASE WHEN a.priority = 'urgent' THEN 1 END) AS urgent_appeals,
+    COUNT(CASE WHEN a.deadline < CURRENT_DATE AND a.status != 'closed' THEN 1 END) AS overdue_appeals,
+    AVG(CASE WHEN a.first_response_at IS NOT NULL THEN 
+        EXTRACT(EPOCH FROM (a.first_response_at - a.created_at)) / 3600 
+    END) AS avg_response_hours,
+    AVG(CASE WHEN a.closed_at IS NOT NULL THEN 
+        EXTRACT(EPOCH FROM (a.closed_at - a.created_at)) / 3600 
+    END) AS avg_resolution_hours
+FROM directions d
+LEFT JOIN appeals a ON d.id = a.direction_id
+WHERE d.is_active = true
+GROUP BY d.id, d.title;
+
+-- Индекс для материализованного представления
+CREATE UNIQUE INDEX IF NOT EXISTS idx_appeals_stats_by_direction_id 
+ON appeals_stats_by_direction(direction_id);
+
+-- Функция для обновления материализованного представления
+CREATE OR REPLACE FUNCTION refresh_appeals_stats()
+RETURNS void AS $$
+BEGIN
+    REFRESH MATERIALIZED VIEW CONCURRENTLY appeals_stats_by_direction;
+END;
+$$ LANGUAGE plpgsql;
+
+-- ===============================
+-- 7. Оптимизация производительности
+-- ===============================
+
+-- Настройка статистики для лучшего планирования запросов
+ALTER TABLE appeals ALTER COLUMN status SET STATISTICS 1000;
+ALTER TABLE appeals ALTER COLUMN priority SET STATISTICS 1000;
+ALTER TABLE appeals ALTER COLUMN direction_id SET STATISTICS 1000;
+
+ALTER TABLE content ALTER COLUMN status SET STATISTICS 1000;
+ALTER TABLE content ALTER COLUMN type SET STATISTICS 1000;
+
+-- Комментарии для документации
+COMMENT ON FUNCTION search_appeals IS 'Поиск обращений с полнотекстовым поиском и фильтрацией';
+COMMENT ON FUNCTION get_appeals_stats IS 'Получение статистики обращений';
+COMMENT ON FUNCTION get_overdue_appeals IS 'Получение обращений с истекшим дедлайном';
+COMMENT ON MATERIALIZED VIEW appeals_stats_by_direction IS 'Статистика обращений по направлениям (обновляется вручную через refresh_appeals_stats())';
+
+-- ===============================
 -- 8. Дополнительные индексы для производительности
 -- ===============================
 
