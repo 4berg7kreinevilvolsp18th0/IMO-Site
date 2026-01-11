@@ -3,23 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 
-  const [selectedDirection, setSelectedDirection] = useState<string>(presetDirection || '');
-  const [selectedSchool, setSelectedSchool] = useState<string>('');
-  const [isAnonymous, setIsAnonymous] = useState(false);
-  const [submittedToken, setSubmittedToken] = useState<string | null>(null);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [files, setFiles] = useState<File[]>([]);
-  const [uploadingFiles, setUploadingFiles] = useState(false);
-
-  function validate(): boolean {
-    const newErrors: Record<string, string> = {};
-
-    if (!title.trim()) {
-      newErrors.title = 'Укажите тему обращения';
-    } else if (title.trim().length < 5) {
-      newErrors.title = 'Тема должна быть не менее 5 символов';
-    }
 
     if (!description.trim()) {
       newErrors.description = 'Опишите ситуацию';
