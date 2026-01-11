@@ -3,23 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 
-
-    if (!description.trim()) {
-      newErrors.description = 'Опишите ситуацию';
-    } else if (description.trim().length < 20) {
-      newErrors.description = 'Описание должно быть не менее 20 символов';
-    }
-
-    if (!contact.trim()) {
-      newErrors.contact = 'Укажите контакт для связи';
-    } else if (!/^[\w\.-]+@[\w\.-]+\.\w+$|^@[\w]+$/.test(contact.trim())) {
-      newErrors.contact = 'Укажите email или Telegram (@username)';
-    }
-
-    if (!selectedSchool.trim()) {
-      newErrors.school = 'Выберите школу или институт';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
