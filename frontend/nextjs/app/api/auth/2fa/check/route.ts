@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '../../../../../lib/auth';
 import { verify2FAToken, getUser2FASecret, is2FAEnabled } from '../../../../../lib/2fa';
+import { logger } from '../../../../../lib/logger';
 
 export const dynamic = 'force-dynamic';
 
@@ -56,7 +57,7 @@ export async function POST(request: NextRequest) {
       verified: isValid,
     });
   } catch (error: any) {
-    console.error('2FA check error:', error);
+    logger.error('2FA check error:', error);
     return NextResponse.json(
       { error: 'Failed to check 2FA' },
       { status: 500 }
