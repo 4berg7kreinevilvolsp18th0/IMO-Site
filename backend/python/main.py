@@ -486,6 +486,14 @@ def update_content(
     return content
 
 
+@app.delete("/api/content/{content_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_content_endpoint(
+    content_id: UUID,
+    db: Session = Depends(get_db)
+):
+    """Delete content (admin endpoint)"""
+    success = crud.delete_content(db, content_id)
+    if not success:
 # ==================== Documents ====================
 
 @app.get("/api/documents", response_model=List[Document])
