@@ -72,3 +72,16 @@ def test_get_appeal_by_token(db, sample_appeal_data):
     retrieved = get_appeal_by_token(db, appeal.public_token)
     assert retrieved is not None
     assert retrieved.public_token == appeal.public_token
+
+
+def test_get_appeals(db, sample_appeal_data):
+    """Test getting all appeals"""
+    # Create multiple appeals
+    for i in range(3):
+        data = sample_appeal_data.copy()
+        data["title"] = f"Test Appeal {i}"
+        create_appeal(db, AppealCreate(**data))
+    
+    appeals = get_appeals(db, skip=0, limit=10)
+    assert len(appeals) == 3
+
