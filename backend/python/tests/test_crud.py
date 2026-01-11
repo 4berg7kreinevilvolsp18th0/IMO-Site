@@ -64,3 +64,11 @@ def test_get_appeal(db, sample_appeal_data):
     assert retrieved is not None
     assert retrieved.id == appeal.id
     assert retrieved.title == appeal.title
+
+
+def test_get_appeal_by_token(db, sample_appeal_data):
+    """Test getting an appeal by public token"""
+    appeal = create_appeal(db, AppealCreate(**sample_appeal_data))
+    retrieved = get_appeal_by_token(db, appeal.public_token)
+    assert retrieved is not None
+    assert retrieved.public_token == appeal.public_token
