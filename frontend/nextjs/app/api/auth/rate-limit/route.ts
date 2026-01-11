@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { checkRateLimit } from '../../../../lib/rateLimit';
+import { checkRateLimitRedis, blockIP, isIPBlocked } from '../../../../lib/redis';
 
 export const dynamic = 'force-dynamic';
 
 /**
  * Проверка rate limit для входа
- * Используется для серверной блокировки
+ * БЕЗОПАСНОСТЬ: Использует Redis для распределенного rate limiting
  */
 export async function POST(request: NextRequest) {
   try {
@@ -16,6 +16,19 @@ export async function POST(request: NextRequest) {
       request.headers.get('x-forwarded-for')?.split(',')[0] ||
       request.headers.get('x-real-ip') ||
       'unknown';
+    
+    // Проверить, не заблокирован ли IP
+    const isBlocked = await isIPBlocked(ip);
+    if (isBlocked) {
+      return NextResponse.json(
+        {
+          allowed: false,
+          blocked: true,
+          message: 'IP заблокирован из-за подозрительной активности',
+        },
+        { status: 403 }
+      );
+    }
     
     // Комбинированный ключ: IP + email (первые 3 символа)
     const key = `login:${ip}:${email ? email.substring(0, 3) : 'unknown'}`;
