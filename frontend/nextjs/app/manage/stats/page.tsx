@@ -287,3 +287,19 @@ export default function ManageStatsPage() {
             onClick={saveStats}
             disabled={saving}
             className="px-6 py-3 rounded-xl bg-oss-red font-semibold hover:bg-oss-red/90 transition disabled:opacity-50"
+          >
+            {saving ? 'Сохранение...' : 'Сохранить статистику'}
+          </button>
+          <button
+            onClick={() => router.back()}
+            className="px-6 py-3 rounded-xl border border-white/20 text-white/80 hover:text-white"
+          >
+            Отмена
+          </button>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+
