@@ -79,3 +79,23 @@ export default function ManageStatsPage() {
         setClosedToday(String(stats.closed_today || ''));
       }
     } catch (error) {
+      // Нет данных за сегодня - это нормально
+      console.log('No stats for today yet');
+    }
+  }
+
+  async function saveStats() {
+    if (!total || !newCount || !inProgress || !waiting || !closed) {
+      toast.error('Заполните все обязательные поля');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const user = await getCurrentUser();
+      if (!user) {
+        toast.error('Необходима авторизация');
+        return;
+      }
+
+      const today = new Date().toISOString().split('T')[0];
