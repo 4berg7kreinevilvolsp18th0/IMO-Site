@@ -29,15 +29,6 @@ export default function StatisticsPage() {
     return () => clearInterval(interval);
   }, []);
 
-        // Группируем по дням
-        const dailyMap = new Map<string, { created_count: number; closed_count: number }>();
-        
-        (appeals || []).forEach((appeal: any) => {
-          const createdDate = new Date(appeal.created_at).toISOString().split('T')[0];
-          if (!dailyMap.has(createdDate)) {
-            dailyMap.set(createdDate, { created_count: 0, closed_count: 0 });
-          }
-          const dayData = dailyMap.get(createdDate)!;
           dayData.created_count += 1;
 
           if (appeal.status === 'closed' && appeal.closed_at) {
