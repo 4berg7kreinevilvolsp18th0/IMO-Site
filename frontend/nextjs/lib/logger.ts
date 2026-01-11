@@ -40,3 +40,24 @@ export const logger = {
   info: (message: string, ...args: any[]) => {
     if (isDevelopment) {
       if (typeof window !== 'undefined') {
+        console.log(`[INFO] ${message}`, ...args);
+      } else {
+        console.log(`[INFO] ${message}`, ...args);
+      }
+    }
+  },
+
+  /**
+   * Логирование отладки (только в development)
+   */
+  debug: (message: string, ...args: any[]) => {
+    if (isDevelopment) {
+      if (typeof window !== 'undefined') {
+        console.log(`[DEBUG] ${message}`, ...args);
+      } else {
+        console.log(`[DEBUG] ${message}`, ...args);
+      }
+    }
+  },
+};
+
