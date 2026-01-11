@@ -1,19 +1,8 @@
 'use client';
 
-import React, { useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { supabase } from '../../lib/supabaseClient';
-import { DIRECTIONS } from '../../lib/directions';
-import { SCHOOLS } from '../../lib/schools';
-import FileUpload from '../../components/FileUpload';
+import React from 'react';
+import Link from 'next/link';
 
-function AppealPageContent() {
-  const params = useSearchParams();
-  const presetDirection = params.get('direction');
-
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [contact, setContact] = useState('');
   const [selectedDirection, setSelectedDirection] = useState<string>(presetDirection || '');
   const [selectedSchool, setSelectedSchool] = useState<string>('');
   const [isAnonymous, setIsAnonymous] = useState(false);
