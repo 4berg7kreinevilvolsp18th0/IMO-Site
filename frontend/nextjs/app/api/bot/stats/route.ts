@@ -129,3 +129,52 @@ export async function POST(request: NextRequest) {
   }
 }
 
+/**
+ * Получение статистики (для сайта)
+ */
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const period = searchParams.get('period') || new Date().toISOString().split('T')[0];
+
+    // Получаем последнюю статистику за период
+    const { data, error } = await supabase
+      .from('statistics')
+      .select('*')
+      .eq('period', period)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (error && error.code !== 'PGRST116') { // PGRST116 = not found
+      console.error('Error fetching statistics:', error);
+      return NextResponse.json(
+        { error: 'Failed to fetch statistics' },
+        { status: 500 }
+      );
+    }
+
+    if (!data) {
+      return NextResponse.json({
+        period,
+        data: null,
+        message: 'No statistics available for this period',
+      });
+    }
+
+    return NextResponse.json({
+      period: data.period,
+      source: data.source,
+      data: data.data,
+      created_at: data.created_at,
+    });
+  } catch (error: any) {
+    console.error('Get stats API error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+
