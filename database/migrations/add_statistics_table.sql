@@ -35,3 +35,6 @@ CREATE TRIGGER trigger_update_statistics_updated_at
 COMMENT ON TABLE statistics IS 'Статистика обращений от бота или введенная вручную';
 COMMENT ON COLUMN statistics.period IS 'Дата периода статистики';
 COMMENT ON COLUMN statistics.source IS 'Источник: bot (от Telegram бота) или manual (ручной ввод)';
+COMMENT ON COLUMN statistics.data IS 'JSON данные статистики: total, by_status, by_direction, created_today, closed_today';
+
+
