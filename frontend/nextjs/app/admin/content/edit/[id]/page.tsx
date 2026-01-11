@@ -476,6 +476,44 @@ export default function EditContentPage() {
               <div>
                 <label className="block text-xs text-white/50 mb-2">Предпросмотр</label>
                 <div className="w-full rounded-xl bg-white/10 p-6 border border-white/20 min-h-[400px] max-h-[600px] overflow-y-auto markdown-content">
+                        <ul className="list-disc ml-6 mt-2 space-y-1" {...props} />
+                      ),
+                      ol: ({ node, ...props }) => (
+                        <ol className="list-decimal ml-6 mt-2 space-y-1" {...props} />
+                      ),
+                      code: ({ node, inline, ...props }: any) =>
+                        inline ? (
+                          <code
+                            className="bg-white/10 px-1.5 py-0.5 rounded text-sm font-mono text-white/90 light:bg-gray-100 light:text-gray-800"
+                            {...props}
+                          />
+                        ) : (
+                          <code
+                            className="block bg-white/5 p-4 rounded-xl overflow-x-auto text-sm font-mono text-white/90 light:bg-gray-100 light:text-gray-800"
+                            {...props}
+                          />
+                        ),
+                      a: ({ node, ...props }) => (
+                        <a
+                          className="text-oss-red hover:underline"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          {...props}
+                        />
+                      ),
+                      blockquote: ({ node, ...props }) => (
+                        <blockquote
+                          className="border-l-4 border-white/20 pl-4 italic my-4 text-white/70 light:border-gray-300 light:text-gray-600"
+                          {...props}
+                        />
+                      ),
+                    }}
+                  >
+                    {body || '*Начните вводить текст...*'}
+                  </ReactMarkdown>
+                </div>
+              </div>
+            </div>
           ) : (
             <>
               <textarea
@@ -499,11 +537,29 @@ export default function EditContentPage() {
         <div className="flex gap-4">
           <button
             onClick={save}
-            disabled={saving}
-            className="px-6 py-3 rounded-xl bg-oss-red font-semibold hover:bg-oss-red/90 transition disabled:opacity-50"
+            disabled={saving || !!slugError}
+            className="px-6 py-3 rounded-xl bg-oss-red font-semibold hover:bg-oss-red/90 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {saving ? 'Сохранение...' : 'Сохранить'}
+            {saving ? 'Сохранение...' : status === 'published' ? 'Опубликовать' : 'Сохранить'}
           </button>
+          {contentId !== 'new' && (
+            <button
+              onClick={async () => {
+                if (!confirm('Удалить этот материал? Это действие нельзя отменить.')) return;
+                try {
+                  const { error } = await supabase.from('content').delete().eq('id', contentId);
+                  if (error) throw error;
+                  toast.success('Материал удалён');
+                  router.push('/admin/content');
+                } catch (err: any) {
+                  toast.error(err.message || 'Ошибка при удалении');
+                }
+              }}
+              className="px-6 py-3 rounded-xl border border-red-500/40 text-red-400 hover:bg-red-500/10 transition"
+            >
+              Удалить
+            </button>
+          )}
           <button
             onClick={() => router.back()}
             className="px-6 py-3 rounded-xl border border-white/20 text-white/80 hover:text-white"
