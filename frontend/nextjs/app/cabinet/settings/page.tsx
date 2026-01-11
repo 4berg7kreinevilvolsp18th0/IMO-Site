@@ -18,3 +18,13 @@ export default function CabinetSettingsPage() {
             <Link
               href="/admin/settings/notifications"
               className="inline-block px-6 py-3 rounded-xl bg-oss-red font-semibold hover:bg-oss-red/90 transition"
+            >
+              Перейти к настройкам
+            </Link>
+          </div>
+        </div>
+      </main>
+    </CabinetGuard>
+  );
+}
+
