@@ -46,3 +46,26 @@ export async function getUserCabinetInfo(): Promise<UserCabinetInfo | null> {
 
   // Получаем направления для ролей с direction_id
   const directionIds = roles
+    .map((r) => r.directionId)
+    .filter((id): id is string => id !== null);
+
+  let directions: Array<{ id: string; title: string; slug: string }> = [];
+  if (directionIds.length > 0) {
+    const { data } = await supabase
+      .from('directions')
+      .select('id, title, slug')
+      .in('id', directionIds);
+    directions = data || [];
+  }
+
+  return {
+    user,
+    roles,
+    primaryRole,
+    cabinetType,
+    hasAccess: true,
+    directions,
+  };
+}
+
+/**
