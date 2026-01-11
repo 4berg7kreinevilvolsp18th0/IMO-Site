@@ -83,4 +83,18 @@ export default function CabinetLoginPage() {
               required
               className="w-full rounded-xl bg-white/10 p-3 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-oss-red focus:border-transparent"
               placeholder="your@email.com"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium mb-2">
+              Пароль
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full rounded-xl bg-white/10 p-3 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-oss-red focus:border-transparent"
               placeholder="••••••••"
