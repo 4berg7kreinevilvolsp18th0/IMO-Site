@@ -21,6 +21,7 @@ export const logger = {
     }
   },
 
+  /**
    * Логирование предупреждений
    */
   warn: (message: string, ...args: any[]) => {
