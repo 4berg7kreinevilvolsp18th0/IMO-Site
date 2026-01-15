@@ -13,7 +13,7 @@ type Column = { key: AppealStatus; title: string };
 const columns: Column[] = [
   { key: 'new', title: 'Новое' },
   { key: 'in_progress', title: 'В работе' },
-  { key: 'waiting', title: 'Ждём инфо' },
+  { key: 'waiting', title: 'Ждём информацию' },
   { key: 'closed', title: 'Закрыто' },
 ];
 
@@ -29,7 +29,7 @@ export default function AdminAppealsKanban() {
   async function load() {
     setLoading(true);
     setError(null);
-    
+
     // Загружаем обращения с информацией о назначенных пользователях
     const { data: appealsData, error: appealsError } = await supabase
       .from('appeals')
@@ -82,7 +82,7 @@ export default function AdminAppealsKanban() {
 
     setAppeals(enrichedAppeals);
     setFilteredAppeals(enrichedAppeals);
-    
+
     // Загружаем список доступных пользователей для назначения
     // В реальности это должны быть пользователи с ролями member/lead/board
     const { data: availableUsers } = await supabase
@@ -134,12 +134,12 @@ export default function AdminAppealsKanban() {
     if (!appeal) return;
 
     const updateData: any = { status: to };
-    
+
     // Автоматически устанавливаем first_response_at при переходе из new в in_progress
     if (to === 'in_progress' && appeal.status === 'new') {
       updateData.first_response_at = new Date().toISOString();
     }
-    
+
     // Автоматически устанавливаем closed_at при закрытии
     if (to === 'closed') {
       updateData.closed_at = new Date().toISOString();
@@ -158,7 +158,7 @@ export default function AdminAppealsKanban() {
     }
 
     setAppeals((prev) => prev.map((a) => (a.id === id ? { ...a, ...updateData } : a)));
-    
+
     // Отправляем уведомления заинтересованным пользователям
     if (updatedAppeal) {
       notifyAppealChange(id, {
@@ -169,7 +169,7 @@ export default function AdminAppealsKanban() {
         console.error('Notification error:', err);
       });
     }
-    
+
     if (updatedAppeal && appeal.contact_value) {
       // Telegram уведомление
       if (appeal.contact_type === 'telegram') {
@@ -190,7 +190,7 @@ export default function AdminAppealsKanban() {
           console.warn('Не удалось отправить Telegram уведомление:', notifError);
         }
       }
-      
+
       // Email уведомление
       if (appeal.contact_type === 'email') {
         try {
@@ -207,7 +207,7 @@ export default function AdminAppealsKanban() {
             }),
           });
         } catch (notifError) {
-          console.warn('Не удалось отправить Email уведомление:', notifError);
+          console.warn('Не удалось отправить сообщение на Email:', notifError);
         }
       }
     }
@@ -222,12 +222,12 @@ export default function AdminAppealsKanban() {
       .from('appeals')
       .update({ assigned_to: userId })
       .eq('id', id);
-    
+
     if (error) {
       setError(error.message);
       return;
     }
-    
+
     // Отправляем уведомление назначенному пользователю
     if (userId) {
       notifyAppealChange(id, {
@@ -237,7 +237,7 @@ export default function AdminAppealsKanban() {
         console.error('Notification error:', err);
       });
     }
-    
+
     await load(); // Перезагружаем для обновления имен
   }
 
@@ -247,12 +247,12 @@ export default function AdminAppealsKanban() {
       .from('appeals')
       .update({ priority })
       .eq('id', id);
-    
+
     if (error) {
       setError(error.message);
       return;
     }
-    
+
     setAppeals((prev) => prev.map((a) => (a.id === id ? { ...a, priority } : a)));
   }
 
@@ -262,12 +262,12 @@ export default function AdminAppealsKanban() {
       .from('appeals')
       .update({ deadline })
       .eq('id', id);
-    
+
     if (error) {
       setError(error.message);
       return;
     }
-    
+
     setAppeals((prev) => prev.map((a) => (a.id === id ? { ...a, deadline } : a)));
   }
 
