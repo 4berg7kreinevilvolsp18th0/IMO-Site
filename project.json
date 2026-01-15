@@ -1,0 +1,121 @@
+{
+  "name": "OSS DVFU Site",
+  "version": "1.0.0",
+  "description": "Официальный сайт Органа студенческого самоуправления Дальневосточного федерального университета",
+  "type": "web-application",
+  "architecture": {
+    "frontend": {
+      "framework": "Next.js 14",
+      "language": "TypeScript",
+      "ui": "React 18",
+      "styling": "Tailwind CSS",
+      "location": "frontend/nextjs"
+    },
+    "backend": {
+      "framework": "FastAPI",
+      "language": "Python 3",
+      "location": "backend/python"
+    },
+    "database": {
+      "primary": "PostgreSQL (Supabase)",
+      "cache": "Redis (Upstash)",
+      "migrations": "database/migrations"
+    },
+    "cms": {
+      "type": "Keystatic",
+      "location": "cms/"
+    },
+    "content": {
+      "type": "Markdown",
+      "location": "content/"
+    }
+  },
+  "features": {
+    "authentication": {
+      "methods": ["email", "2FA"],
+      "security": ["rate-limiting", "captcha", "csrf-protection"]
+    },
+    "appeals": {
+      "anonymity": true,
+      "file-attachments": true,
+      "status-tracking": true,
+      "retention-policy": "24-hours-auto-delete"
+    },
+    "content-management": {
+      "news": true,
+      "guides": true,
+      "documents": true,
+      "admin-interface": true
+    },
+    "notifications": {
+      "email": true,
+      "telegram": true,
+      "push": true
+    },
+    "analytics": {
+      "dashboards": true,
+      "statistics": true,
+      "export": true
+    }
+  },
+  "security": {
+    "principles": [
+      "defense-in-depth",
+      "zero-trust",
+      "least-privilege",
+      "component-isolation",
+      "failover-resilience"
+    ],
+    "layers": [
+      "network-layer",
+      "application-layer",
+      "database-layer",
+      "authentication-layer",
+      "authorization-layer"
+    ],
+    "components": {
+      "rate-limiting": "Redis-based",
+      "csrf-protection": true,
+      "captcha": "Google reCAPTCHA v3",
+      "2fa": "TOTP",
+      "security-headers": true,
+      "csp": true,
+      "rls": "Row Level Security in PostgreSQL"
+    },
+    "isolation": {
+      "enabled": true,
+      "circuit-breaker": true,
+      "failover": true,
+      "graceful-degradation": true
+    }
+  },
+  "deployment": {
+    "frontend": "Vercel",
+    "backend": "Vercel Serverless / Python",
+    "database": "Supabase",
+    "cdn": "Vercel Edge Network",
+    "monitoring": "Vercel Analytics"
+  },
+  "development": {
+    "node-version": "18.x",
+    "python-version": "3.11+",
+    "package-manager": "npm",
+    "code-style": "ESLint + Prettier",
+    "commits": "Conventional Commits"
+  },
+  "repository": {
+    "url": "https://github.com/your-org/oss-dvfu-site",
+    "license": "MIT",
+    "main-branch": "main"
+  },
+  "team": {
+    "organization": "OSS DVFU",
+    "university": "ДВФУ",
+    "contact": "support@oss-dvfu.ru"
+  },
+  "status": "active-development",
+  "last-updated": "2024"
+}
+
+
+
