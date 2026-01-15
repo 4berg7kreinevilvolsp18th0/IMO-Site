@@ -8,7 +8,7 @@ export default function AboutPage() {
     <main className="min-h-screen bg-oss-dark light:bg-gray-50 text-white light:text-gray-900">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="mb-8">
-          <Link 
+          <Link
             href="/"
             className="text-oss-red hover:text-oss-red/80 text-sm sm:text-base font-medium flex items-center gap-2 mb-6
               light:text-oss-red light:hover:text-oss-red/90"
@@ -32,19 +32,19 @@ export default function AboutPage() {
           prose-code:text-oss-red light:prose-code:text-oss-red
           prose-pre:bg-oss-dark/50 light:prose-pre:bg-gray-100
           rounded-2xl border border-white/10 light:border-gray-200 bg-white/5 light:bg-white p-6 sm:p-8 md:p-10">
-          
+
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-4 light:text-gray-900">Описание</h2>
             <p className="text-white/80 light:text-gray-700 leading-relaxed">
-              Официальный сайт Объединённого совета студентов Дальневосточного федерального университета (ОСС ДВФУ). 
-              Единая платформа для подачи обращений, публикации новостей, гайдов и документов, а также управления 
+              Официальный сайт Объединённого совета студентов Дальневосточного федерального университета (ОСС ДВФУ).
+              Единая платформа для подачи обращений, публикации новостей, гайдов и документов, а также управления
               студенческими организациями.
             </p>
           </section>
 
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-4 light:text-gray-900">Архитектура проекта</h2>
-            
+
             <h3 className="text-xl font-semibold mb-3 light:text-gray-900">Frontend</h3>
             <ul className="list-disc list-inside space-y-2 text-white/80 light:text-gray-700 mb-6">
               <li><strong>Next.js 14</strong> (App Router) — React-фреймворк для серверного рендеринга</li>
