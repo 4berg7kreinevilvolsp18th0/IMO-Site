@@ -208,3 +208,5 @@ storage/
 public/uploads/
 public/files/
 *.pdf.backup
+/docs
+backend/python/DEPLOY_CHECKLIST.md
