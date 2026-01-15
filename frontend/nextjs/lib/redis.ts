@@ -1,7 +1,10 @@
 /**
  * Redis клиент для rate limiting и кэширования
  * Использует Upstash Redis (бесплатный tier) или собственный Redis
+ * С изоляцией компонентов: при недоступности Redis система продолжает работать
  */
+
+import { safeRedisOperation } from './componentIsolation';
 
 let redisClient: any = null;
 
@@ -16,7 +19,6 @@ async function getRedisClient() {
 
   if (upstashUrl && upstashToken) {
     // Используем Upstash Redis (HTTP-based, работает на Edge)
-    // @ts-ignore - @upstash/redis имеет типы, но могут быть проблемы с динамическим импортом
     const { Redis } = await import('@upstash/redis');
     redisClient = new Redis({
       url: upstashUrl,
@@ -50,56 +52,59 @@ export async function checkRateLimitRedis(
   maxRequests: number = 100,
   windowSeconds: number = 60
 ): Promise<{ allowed: boolean; remaining: number; resetTime: number }> {
-  const redis = await getRedisClient();
-  
-  if (!redis) {
-    // Fallback на in-memory (только для разработки)
-    return checkRateLimitMemory(key, maxRequests, windowSeconds * 1000);
-  }
+  // Используем изоляцию компонентов: если Redis недоступен, используем fallback
+  return safeRedisOperation(
+    async () => {
+      const redis = await getRedisClient();
+      
+      if (!redis) {
+        throw new Error('Redis not available');
+      }
 
-  try {
-    const now = Date.now();
-    const windowMs = windowSeconds * 1000;
-    const redisKey = `rate_limit:${key}`;
-    
-    // Используем sliding window log algorithm
-    const pipeline = redis.pipeline();
-    
-    // Удалить старые записи (старше окна)
-    pipeline.zremrangebyscore(redisKey, 0, now - windowMs);
-    
-    // Подсчитать текущие запросы
-    pipeline.zcard(redisKey);
-    
-    // Добавить текущий запрос
-    pipeline.zadd(redisKey, now, `${now}-${Math.random()}`);
-    
-    // Установить TTL
-    pipeline.expire(redisKey, windowSeconds);
-    
-    const results = await pipeline.exec();
-    const count = results?.[1]?.[1] as number || 0;
-    
-    if (count >= maxRequests) {
-      // Получить время истечения
-      const ttl = await redis.ttl(redisKey);
+      const now = Date.now();
+      const windowMs = windowSeconds * 1000;
+      const redisKey = `rate_limit:${key}`;
+      
+      // Используем sliding window log algorithm
+      const pipeline = redis.pipeline();
+      
+      // Удалить старые записи (старше окна)
+      pipeline.zremrangebyscore(redisKey, 0, now - windowMs);
+      
+      // Подсчитать текущие запросы
+      pipeline.zcard(redisKey);
+      
+      // Добавить текущий запрос
+      pipeline.zadd(redisKey, now, `${now}-${Math.random()}`);
+      
+      // Установить TTL
+      pipeline.expire(redisKey, windowSeconds);
+      
+      const results = await pipeline.exec();
+      const count = results?.[1]?.[1] as number || 0;
+      
+      if (count >= maxRequests) {
+        // Получить время истечения
+        const ttl = await redis.ttl(redisKey);
+        return {
+          allowed: false,
+          remaining: 0,
+          resetTime: now + (ttl * 1000),
+        };
+      }
+      
       return {
-        allowed: false,
-        remaining: 0,
-        resetTime: now + (ttl * 1000),
+        allowed: true,
+        remaining: maxRequests - count - 1,
+        resetTime: now + windowMs,
       };
+    },
+    () => {
+      // Fallback на in-memory при недоступности Redis
+      console.warn('Redis unavailable, using in-memory rate limiting');
+      return checkRateLimitMemory(key, maxRequests, windowSeconds * 1000);
     }
-    
-    return {
-      allowed: true,
-      remaining: maxRequests - count - 1,
-      resetTime: now + windowMs,
-    };
-  } catch (error) {
-    console.error('Redis rate limit error:', error);
-    // Fallback на in-memory
-    return checkRateLimitMemory(key, maxRequests, windowSeconds * 1000);
-  }
+  );
 }
 
 /**
@@ -158,16 +163,19 @@ export async function blockIP(ip: string, durationSeconds: number = 3600): Promi
  * Проверка, заблокирован ли IP
  */
 export async function isIPBlocked(ip: string): Promise<boolean> {
-  const redis = await getRedisClient();
-  if (!redis) return false;
+  return safeRedisOperation(
+    async () => {
+      const redis = await getRedisClient();
+      if (!redis) return false;
 
-  try {
-    const blocked = await redis.get(`blocked_ip:${ip}`);
-    return blocked === '1';
-  } catch (error) {
-    console.error('Redis check blocked IP error:', error);
-    return false;
-  }
+      const blocked = await redis.get(`blocked_ip:${ip}`);
+      return blocked === '1';
+    },
+    () => {
+      // Fallback: если Redis недоступен, не блокируем IP (система продолжает работать)
+      return false;
+    }
+  );
 }
 
 /**
