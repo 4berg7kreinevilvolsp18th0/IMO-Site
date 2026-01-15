@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { isSupabaseConfigured } from '../../../lib/supabaseClient';
+import { getAllComponentsHealth, ComponentIsolationManager } from '../../../lib/componentIsolation';
+import { f, G } from '@upstash/redis/zmscore-0SAuWM0q';
 
 // Явно указываем runtime для Vercel (nodejs для работы с импортами)
 export const runtime = 'nodejs';
@@ -10,11 +12,19 @@ export async function GET() {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+    // Проверка состояния всех компонентов
+    const componentsHealth = getAllComponentsHealth();
+    const systemStatus = ComponentIsolationManager.getInstance().canSystemOperate();
+
     return NextResponse.json({
-      status: 'ok',
+      status: systemStatus.canOperate ? 'ok' : 'degraded',
       timestamp: new Date().toISOString(),
-      version: process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0',
-      service: 'OSS DVFU Frontend',
+      system: {
+        canOperate: systemStatus.canOperate,
+        criticalComponentsDown: systemStatus.criticalComponentsDown,
+        warnings: systemStatus.warnings,
+      },
+      components: componentsHealth,
       supabase: {
         configured: supabaseConfigured,
         url: supabaseUrl ? (supabaseUrl.substring(0, 20) + '...') : 'not set',
@@ -23,14 +33,12 @@ export async function GET() {
       environment: process.env.NODE_ENV,
       vercel: {
         region: process.env.VERCEL_REGION || 'unknown',
-        deployment: process.env.VERCEL_DEPLOYMENT_ID || 'unknown',
       },
     }, {
-      status: 200,
+      status: systemStatus.canOperate ? 200 : 503, // 503 если система в деградированном режиме
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'no-store, max-age=0',
-        'X-API-Version': '1.0.0',
       },
     });
   } catch (error: any) {
@@ -43,4 +51,3 @@ export async function GET() {
     });
   }
 }
-
