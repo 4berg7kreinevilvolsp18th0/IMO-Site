@@ -126,7 +126,16 @@ export const isSupabaseConfigured = () => {
     supabaseUrl.includes('.supabase.co'));
 };
 
-// Функция для безопасного выполнения запросов с обработкой ошибок
+// Импортируем circuit breaker (динамически, чтобы избежать circular dependencies)
+let circuitBreakerModule: any = null;
+async function getCircuitBreaker() {
+  if (!circuitBreakerModule) {
+    circuitBreakerModule = await import('./circuitBreaker');
+  }
+  return circuitBreakerModule;
+}
+
+// Функция для безопасного выполнения запросов с обработкой ошибок и circuit breaker
 export async function safeSupabaseQuery<T>(
   query: () => Promise<{ data: T | null; error: any }>,
   errorMessage = 'Ошибка при загрузке данных'
@@ -139,9 +148,29 @@ export async function safeSupabaseQuery<T>(
       };
     }
 
-    const result = await query();
+    // Используем circuit breaker для защиты от каскадных сбоев
+    const { withCircuitBreaker } = await getCircuitBreaker();
+    
+    const result = await withCircuitBreaker(
+      'supabase',
+      async () => {
+        return await query();
+      },
+      () => {
+        // Fallback: возвращаем ошибку, но не выбрасываем исключение
+        return { data: null, error: { message: 'Сервис временно недоступен' } };
+      }
+    );
 
     if (result.error) {
+      // Если это наш fallback error - возвращаем его
+      if (result.error.message === 'Сервис временно недоступен') {
+        return {
+          data: null,
+          error: 'База данных временно недоступна. Пожалуйста, попробуйте позже.',
+        };
+      }
+
       console.error('Supabase error:', result.error);
       
       // Обработка специфичных ошибок
