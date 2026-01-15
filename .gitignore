@@ -210,3 +210,5 @@ public/files/
 *.pdf.backup
 /docs
 backend/python/DEPLOY_CHECKLIST.md
+ERRORS_REPORT.md
+ERRORS_AND_SECURITY_REPORT.md
