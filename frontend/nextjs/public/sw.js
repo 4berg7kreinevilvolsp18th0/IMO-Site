@@ -3,20 +3,7 @@ self.addEventListener('push', function(event) {
   const data = event.data ? event.data.json() : {};
   const title = data.title || 'ОСС ДВФУ';
   const options = {
-    body: data.body || 'У вас новое уведомление',
-    icon: '/favicon.ico',
-    badge: '/favicon.ico',
-    tag: data.tag || 'default',
-    data: data.data || {},
-    requireInteraction: data.requireInteraction || false,
-  };
-
-  event.waitUntil(
-    self.registration.showNotification(title, options)
-  );
-});
-
-self.addEventListener('notificationclick', function(event) {
+    body: data.bodicationclick', function(event) {
   event.notification.close();
 
   const urlToOpen = event.notification.data?.url || '/admin/appeals';
@@ -44,3 +31,17 @@ self.addEventListener('activate', function(event) {
   event.waitUntil(clients.claim());
 });
 
+y || 'У вас новое уведомление',
+    icon: '/favicon.ico',
+    badge: '/favicon.ico',
+    tag: data.tag || 'default',
+    data: data.data || {},
+    requireInteraction: data.requireInteraction || false,
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
+});
+
+self.addEventListener('notif
