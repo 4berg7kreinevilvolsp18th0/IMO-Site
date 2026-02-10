@@ -1,14 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import info from '@/content/info.json';
-import { WaveDividerSoft } from './OceanDecorations';
+import { AngularDivider } from './OceanDecorations';
 
 const year = new Date().getFullYear();
 
 export default function Footer() {
   return (
     <footer className="relative bg-imo-navy" role="contentinfo">
-      <WaveDividerSoft className="text-imo-navy -mt-1" />
+      <AngularDivider className="text-imo-navy -mt-1" />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
@@ -24,7 +24,7 @@ export default function Footer() {
               />
               <div className="flex flex-col leading-none">
                 <span className="font-heading text-sm tracking-[0.15em] text-white">ИМО</span>
-                <span className="text-[10px] text-imo-foam/50 font-body tracking-wider mt-0.5">ДВФУ</span>
+                <span className="text-[10px] text-imo-neon/60 font-body tracking-wider mt-0.5">ДВФУ</span>
               </div>
             </div>
             <p className="text-sm text-white/40 leading-relaxed font-body font-light">
@@ -36,7 +36,7 @@ export default function Footer() {
 
           {/* Навигация */}
           <nav aria-label="Навигация в подвале">
-            <h4 className="font-heading text-white/60 text-[11px] tracking-[0.15em] mb-4">НАВИГАЦИЯ</h4>
+            <h4 className="font-heading text-imo-neon/60 text-[11px] tracking-[0.15em] mb-4">НАВИГАЦИЯ</h4>
             <div className="flex flex-col gap-2.5">
               <FooterLink href="/programs" label="Программы" />
               <FooterLink href="/news" label="Новости" />
@@ -47,7 +47,7 @@ export default function Footer() {
 
           {/* Ресурсы школы */}
           <div>
-            <h4 className="font-heading text-white/60 text-[11px] tracking-[0.15em] mb-4">РЕСУРСЫ ШКОЛЫ</h4>
+            <h4 className="font-heading text-imo-neon/60 text-[11px] tracking-[0.15em] mb-4">РЕСУРСЫ ШКОЛЫ</h4>
             <div className="flex flex-col gap-2.5">
               <FooterLink href={info.links.vk_school} label="ВКонтакте школы" external />
               <FooterLink href={info.links.telegram_school} label="Telegram школы" external />
@@ -57,7 +57,7 @@ export default function Footer() {
 
           {/* Студсовет */}
           <div>
-            <h4 className="font-heading text-white/60 text-[11px] tracking-[0.15em] mb-4">СТУДСОВЕТ</h4>
+            <h4 className="font-heading text-imo-neon/60 text-[11px] tracking-[0.15em] mb-4">СТУДСОВЕТ</h4>
             <div className="flex flex-col gap-2.5">
               <FooterLink href="/student-council" label="О студсовете" />
               <FooterLink href="/student-council/team" label="Состав" />
@@ -70,17 +70,17 @@ export default function Footer() {
         </div>
 
         {/* Нижняя полоса */}
-        <div className="border-t border-white/5 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="border-t-2 border-imo-neon/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-[11px] text-white/30 font-body font-light">
-            © {year} Институт Мирового Океана · ДВФУ · Остров Русский, Владивосток
+            &copy; {year} Институт Мирового Океана &middot; ДВФУ &middot; Остров Русский, Владивосток
           </p>
           <a
             href={info.links.apply}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[11px] text-imo-foam/50 hover:text-imo-sky font-heading tracking-[0.1em] transition-colors"
+            className="text-[11px] text-imo-neon/50 hover:text-imo-neon font-heading tracking-[0.1em] transition-colors"
           >
-            ПОСТУПИТЬ →
+            ПОСТУПИТЬ &rarr;
           </a>
         </div>
       </div>
@@ -89,7 +89,7 @@ export default function Footer() {
 }
 
 function FooterLink({ href, label, external = false }: { href: string; label: string; external?: boolean }) {
-  const cls = "text-sm text-white/40 hover:text-imo-sky transition-colors font-body font-light";
+  const cls = "text-sm text-white/40 hover:text-imo-neon transition-colors font-body font-light";
   if (external) {
     return (
       <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
