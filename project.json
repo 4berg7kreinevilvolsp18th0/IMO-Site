@@ -1,7 +1,7 @@
 {
-  "name": "OSS DVFU Site",
+  "name": "imo-dvfu-site",
   "version": "1.0.0",
-  "description": "Официальный сайт Органа студенческого самоуправления Дальневосточного федерального университета",
+  "description": "Сайт Института Мирового Океана (ИМО) ДВФУ",
   "type": "web-application",
   "architecture": {
     "frontend": {
@@ -11,111 +11,31 @@
       "styling": "Tailwind CSS",
       "location": "frontend/nextjs"
     },
-    "backend": {
-      "framework": "FastAPI",
-      "language": "Python 3",
-      "location": "backend/python"
-    },
-    "database": {
-      "primary": "PostgreSQL (Supabase)",
-      "cache": "Redis (Upstash)",
-      "migrations": "database/migrations"
-    },
-    "cms": {
-      "type": "Keystatic",
-      "location": "cms/"
-    },
     "content": {
-      "type": "Markdown",
-      "location": "content/"
+      "type": "JSON files (no database)",
+      "location": "frontend/nextjs/content/"
     }
   },
   "features": {
-    "authentication": {
-      "methods": ["email", "2FA"],
-      "security": ["rate-limiting", "captcha", "csrf-protection"]
-    },
-    "appeals": {
-      "anonymity": true,
-      "file-attachments": true,
-      "status-tracking": true,
-      "retention-policy": "24-hours-auto-delete"
-    },
-    "content-management": {
-      "news": true,
-      "guides": true,
-      "documents": true,
-      "admin-interface": true
-    },
-    "notifications": {
-      "email": true,
-      "telegram": true,
-      "push": true
-    },
-    "analytics": {
-      "dashboards": true,
-      "statistics": true,
-      "export": true
-    }
-  },
-  "security": {
-    "principles": [
-      "defense-in-depth",
-      "zero-trust",
-      "least-privilege",
-      "component-isolation",
-      "failover-resilience"
-    ],
-    "layers": [
-      "network-layer",
-      "application-layer",
-      "database-layer",
-      "authentication-layer",
-      "authorization-layer"
-    ],
-    "components": {
-      "rate-limiting": "Redis-based",
-      "csrf-protection": true,
-      "captcha": "Google reCAPTCHA v3",
-      "2fa": "TOTP",
-      "security-headers": true,
-      "csp": true,
-      "rls": "Row Level Security in PostgreSQL"
-    },
-    "isolation": {
-      "enabled": true,
-      "circuit-breaker": true,
-      "failover": true,
-      "graceful-degradation": true
-    }
+    "pages": ["главная", "программы", "новости", "о школе", "контакты"],
+    "social-links": ["ВКонтакте школы", "Telegram школы", "ВК студсовета", "Telegram студсовета"],
+    "content-update": "Редактирование JSON-файлов в content/ → git push → автодеплой"
   },
   "deployment": {
-    "frontend": "Vercel",
-    "backend": "Vercel Serverless / Python",
-    "database": "Supabase",
-    "cdn": "Vercel Edge Network",
-    "monitoring": "Vercel Analytics"
+    "hosting": "Vercel",
+    "domain": "imo-dvfu.vercel.app",
+    "auto-deploy": "git push → автоматический деплой"
   },
   "development": {
     "node-version": "18.x",
-    "python-version": "3.11+",
     "package-manager": "npm",
-    "code-style": "ESLint + Prettier",
-    "commits": "Conventional Commits"
-  },
-  "repository": {
-    "url": "https://github.com/your-org/oss-dvfu-site",
-    "license": "MIT",
-    "main-branch": "main"
+    "run": "cd frontend/nextjs && npm run dev"
   },
   "team": {
-    "organization": "OSS DVFU",
+    "organization": "Институт Мирового Океана",
     "university": "ДВФУ",
-    "contact": "support@oss-dvfu.ru"
+    "site": "http://ocean.study/"
   },
   "status": "active-development",
-  "last-updated": "2024"
+  "last-updated": "2026"
 }
-
-
-

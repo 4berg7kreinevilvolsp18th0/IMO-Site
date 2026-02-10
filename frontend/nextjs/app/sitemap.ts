@@ -1,70 +1,38 @@
-import { MetadataRoute } from 'next';
+import type { MetadataRoute } from 'next';
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://oss-dvfu.vercel.app';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://imo-dvfu.vercel.app';
 
-  // Статические страницы
-  const staticPages = [
+export default function sitemap(): MetadataRoute.Sitemap {
+  return [
     {
-      url: baseUrl,
+      url: SITE_URL,
       lastModified: new Date(),
-      changeFrequency: 'daily' as const,
+      changeFrequency: 'weekly',
       priority: 1,
     },
     {
-      url: `${baseUrl}/directions`,
+      url: `${SITE_URL}/programs`,
       lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
+      changeFrequency: 'monthly',
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/appeal`,
+      url: `${SITE_URL}/news`,
       lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
+      changeFrequency: 'daily',
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/statistics`,
+      url: `${SITE_URL}/about`,
       lastModified: new Date(),
-      changeFrequency: 'daily' as const,
+      changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/content`,
+      url: `${SITE_URL}/contacts`,
       lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/documents`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/contacts`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
+      changeFrequency: 'monthly',
+      priority: 0.6,
     },
   ];
-
-  // Динамические страницы направлений
-  const directions = [
-    { slug: 'legal' },
-    { slug: 'infrastructure' },
-    { slug: 'scholarship' },
-    { slug: 'international' },
-    { slug: 'other' },
-  ];
-
-  const directionPages = directions.map((dir) => ({
-    url: `${baseUrl}/directions/${dir.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.8,
-  }));
-
-  return [...staticPages, ...directionPages];
 }
-

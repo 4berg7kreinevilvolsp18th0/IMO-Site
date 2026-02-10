@@ -1,17 +1,101 @@
+import Image from 'next/image';
+import Link from 'next/link';
+import info from '@/content/info.json';
+import { WaveDividerSoft } from './OceanDecorations';
+
 const year = new Date().getFullYear();
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-oss-dark winter-footer">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 text-xs sm:text-sm text-white/60 winter-footer-content">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
+    <footer className="relative bg-imo-navy" role="contentinfo">
+      <WaveDividerSoft className="text-imo-navy -mt-1" />
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
+          {/* О школе */}
           <div>
-            <div className="text-white/80 font-medium text-sm sm:text-base winter-footer-title">Объединённый совет студентов ДВФУ</div>
-            <div className="text-xs sm:text-sm winter-footer-text">Официальный сайт: обращения, гайды, новости, документы.</div>
+            <div className="flex items-center gap-3 mb-4">
+              <Image
+                src="/Лого вектор белое.svg"
+                alt="ИМО"
+                width={32}
+                height={32}
+                className="w-8 h-8 opacity-80"
+              />
+              <div className="flex flex-col leading-none">
+                <span className="font-heading text-sm tracking-[0.15em] text-white">ИМО</span>
+                <span className="text-[10px] text-imo-foam/50 font-body tracking-wider mt-0.5">ДВФУ</span>
+              </div>
+            </div>
+            <p className="text-sm text-white/40 leading-relaxed font-body font-light">
+              Институт Мирового Океана.<br />
+              Дальневосточный федеральный<br />
+              университет.
+            </p>
           </div>
-          <div className="text-white/50 text-xs sm:text-sm winter-footer-copyright">© {year} ОСС ДВФУ • Версия MVP</div>
+
+          {/* Навигация */}
+          <nav aria-label="Навигация в подвале">
+            <h4 className="font-heading text-white/60 text-[11px] tracking-[0.15em] mb-4">НАВИГАЦИЯ</h4>
+            <div className="flex flex-col gap-2.5">
+              <FooterLink href="/programs" label="Программы" />
+              <FooterLink href="/news" label="Новости" />
+              <FooterLink href="/about" label="О школе" />
+              <FooterLink href="/contacts" label="Контакты" />
+            </div>
+          </nav>
+
+          {/* Ресурсы школы */}
+          <div>
+            <h4 className="font-heading text-white/60 text-[11px] tracking-[0.15em] mb-4">РЕСУРСЫ ШКОЛЫ</h4>
+            <div className="flex flex-col gap-2.5">
+              <FooterLink href={info.links.vk_school} label="ВКонтакте школы" external />
+              <FooterLink href={info.links.telegram_school} label="Telegram школы" external />
+              <FooterLink href={info.links.official_site} label="ocean.study" external />
+            </div>
+          </div>
+
+          {/* Студсовет */}
+          <div>
+            <h4 className="font-heading text-white/60 text-[11px] tracking-[0.15em] mb-4">СТУДСОВЕТ</h4>
+            <div className="flex flex-col gap-2.5">
+              <FooterLink href={info.links.vk_student_council} label="ВК студсовета" external />
+              <FooterLink href={info.links.telegram_student_council} label="Telegram студсовета" external />
+            </div>
+          </div>
+        </div>
+
+        {/* Нижняя полоса */}
+        <div className="border-t border-white/5 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-[11px] text-white/30 font-body font-light">
+            © {year} Институт Мирового Океана · ДВФУ · Остров Русский, Владивосток
+          </p>
+          <a
+            href={info.links.apply}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[11px] text-imo-foam/50 hover:text-imo-sky font-heading tracking-[0.1em] transition-colors"
+          >
+            ПОСТУПИТЬ →
+          </a>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterLink({ href, label, external = false }: { href: string; label: string; external?: boolean }) {
+  const cls = "text-sm text-white/40 hover:text-imo-sky transition-colors font-body font-light";
+  if (external) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
+        {label}
+      </a>
+    );
+  }
+  return (
+    <Link href={href} className={cls}>
+      {label}
+    </Link>
   );
 }

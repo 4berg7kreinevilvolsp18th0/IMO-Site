@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "name": "imo-cms-path-a",
+  "buildCommand": "cd backend && pip install -r requirements.txt && python manage.py collectstatic --noinput",
+  "builds": [
+    {
+      "src": "backend/api/index.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    { "src": "/static/(.*)", "dest": "/static/$1" },
+    { "src": "/media/(.*)", "dest": "/media/$1" },
+    { "src": "/(.*)", "dest": "backend/api/index.py" }
+  ],
+  "env": {
+    "DJANGO_SETTINGS_MODULE": "mysite.settings.prod"
+  }
+}

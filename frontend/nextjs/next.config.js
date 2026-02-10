@@ -1,10 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Убрали output: 'standalone' для правильной работы на Vercel
+  reactStrictMode: true,
+
   images: {
-    domains: [],
+    remotePatterns: [],
   },
-  // Для SEO
+
+  // Заголовки безопасности
   async headers() {
     return [
       {
@@ -45,4 +47,3 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
-

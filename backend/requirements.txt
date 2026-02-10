@@ -1,0 +1,14 @@
+# Django + Wagtail (Path A + Path B)
+Django>=4.2,<5.0
+wagtail>=5.2,<6.0
+Pillow>=10.0.0
+
+# Path A: Vercel serverless
+mangum>=0.17.0
+dj-database-url>=2.1.0
+whitenoise>=6.6.0
+gunicorn>=21.0.0
+
+# Optional: S3/R2 for MEDIA on serverless
+# boto3>=1.28.0
+# django-storages>=1.14.0

@@ -1,58 +1,61 @@
 import './globals.css';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import ThemeProvider from '../components/ThemeProvider';
-import { LocaleProvider } from '../components/LocaleProvider';
-import ToastProvider from '../components/ToastProvider';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import type { Metadata } from 'next';
+import { Ubuntu } from 'next/font/google';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://oss-dvfu.vercel.app';
+const ubuntu = Ubuntu({
+  subsets: ['cyrillic', 'latin'],
+  weight: ['300', '400', '500', '700'],
+  display: 'swap',
+  variable: '--font-ubuntu',
+});
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://imo-dvfu.vercel.app';
 
 export const metadata: Metadata = {
   title: {
-    default: 'ОСС ДВФУ - Объединённый совет студентов ДВФУ',
-    template: '%s | ОСС ДВФУ',
+    default: 'ИМО ДВФУ — Институт Мирового Океана',
+    template: '%s | ИМО ДВФУ',
   },
   description:
-    'Единое окно для обращений, гайдов и новостей ОСС ДВФУ. Решаем правовые, инфраструктурные, стипендиальные, адаптационные и консультационные вопросы студентов ДВФУ.',
+    'Официальный сайт Института Мирового Океана ДВФУ. Программы бакалавриата и магистратуры, новости, экспедиции, стипендии.',
   keywords: [
-    'ОСС ДВФУ',
-    'Объединённый совет студентов',
+    'Институт Мирового Океана',
+    'ИМО',
     'ДВФУ',
-    'студенческое самоуправление',
-    'обращения студентов',
-    'помощь студентам',
+    'океанология',
+    'биология',
+    'экология',
+    'мехатроника',
+    'остров Русский',
+    'Владивосток',
+    'бакалавриат',
+    'магистратура',
   ],
-  authors: [{ name: 'ОСС ДВФУ' }],
-  creator: 'ОСС ДВФУ',
-  publisher: 'ОСС ДВФУ',
+  authors: [{ name: 'ИМО ДВФУ' }],
+  creator: 'ИМО ДВФУ',
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon.ico',
     apple: '/favicon.ico',
   },
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
   metadataBase: new URL(siteUrl),
   alternates: {
-    canonical: '/',
+    canonical: siteUrl,
   },
   openGraph: {
     type: 'website',
     locale: 'ru_RU',
     url: siteUrl,
-    siteName: 'ОСС ДВФУ',
-    title: 'ОСС ДВФУ - Объединённый совет студентов ДВФУ',
-    description:
-      'Единое окно для обращений, гайдов и новостей ОСС ДВФУ. Решаем правовые, инфраструктурные, стипендиальные вопросы студентов.',
+    siteName: 'ИМО ДВФУ',
+    title: 'ИМО ДВФУ — Институт Мирового Океана',
+    description: 'Программы бакалавриата и магистратуры, экспедиции, стипендии и жизнь в кампусе на острове Русский.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'ОСС ДВФУ',
-    description: 'Единое окно для обращений, гайдов и новостей ОСС ДВФУ',
+    title: 'ИМО ДВФУ — Институт Мирового Океана',
+    description: 'Программы, экспедиции и стипендии Института Мирового Океана ДВФУ.',
   },
   robots: {
     index: true,
@@ -65,29 +68,29 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    // Добавьте ваш Google Search Console verification code
-    // google: 'your-verification-code',
-  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" suppressHydrationWarning>
+    <html lang="ru" className={ubuntu.variable}>
       <head>
-        <link rel="canonical" href={siteUrl} />
         <link rel="icon" href="/favicon.ico" />
+        {/* Nasalization — заголовочный шрифт брендбука ИМО (CDN Fonts) */}
+        <link rel="preconnect" href="https://fonts.cdnfonts.com" crossOrigin="anonymous" />
+        <link
+          rel="stylesheet"
+          href="https://fonts.cdnfonts.com/css/nasalization-2"
+        />
       </head>
-      <body className="bg-oss-dark light:bg-gradient-to-br light:from-white light:via-gray-50 light:to-gray-100 text-white light:text-gray-900 antialiased transition-all duration-500 font-sf-text">
-        <ThemeProvider>
-          <LocaleProvider>
-            <ToastProvider>
-              <Header />
-              {children}
-              <Footer />
-            </ToastProvider>
-          </LocaleProvider>
-        </ThemeProvider>
+      <body className={`bg-imo-deep text-white antialiased font-body ${ubuntu.variable}`}>
+        <a href="#main-content" className="skip-to-content">
+          Перейти к содержимому
+        </a>
+        <Header />
+        <div id="main-content">
+          {children}
+        </div>
+        <Footer />
       </body>
     </html>
   );

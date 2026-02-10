@@ -2,38 +2,58 @@ export type Direction = {
   slug: string;
   title: string;
   description: string;
-  colorKey: 'legal' | 'infrastructure' | 'scholarship' | 'international' | 'neutral';
+  color: string;      // tailwind bg color
+  textColor: string;  // tailwind text color
+  icon: string;       // emoji
 };
 
 export const DIRECTIONS: Direction[] = [
   {
-    slug: 'legal',
-    title: 'Правовой комитет',
-    description: 'Разъяснения, защита прав, апелляции, конфликты, регламенты.',
-    colorKey: 'legal',
+    slug: 'geography',
+    title: 'География и моделирование геосистем',
+    description: 'Изменения окружающей среды, картографирование, ГИС-технологии, геомаркетинг.',
+    color: 'bg-imo-ocean',
+    textColor: 'text-imo-ocean',
+    icon: '🌍',
   },
   {
-    slug: 'infrastructure',
-    title: 'Инфраструктурный блок',
-    description: 'Общежития, кампус, аудитории, быт и сервисы.',
-    colorKey: 'infrastructure',
+    slug: 'hydrometeo',
+    title: 'Цифровая гидрометеорология',
+    description: 'Атмосфера и гидросфера, климатические риски, метеорология, океанология.',
+    color: 'bg-imo-wave',
+    textColor: 'text-imo-wave',
+    icon: '🌊',
   },
   {
-    slug: 'scholarship',
-    title: 'Стипендиальный комитет',
-    description: 'Стипендии, выплаты, сроки, причины удержаний, консультации.',
-    colorKey: 'scholarship',
+    slug: 'ecology',
+    title: 'Экология и природопользование',
+    description: 'Управление качеством окружающей среды, мониторинг, экологическая безопасность.',
+    color: 'bg-imo-green',
+    textColor: 'text-imo-green',
+    icon: '🌿',
   },
   {
-    slug: 'international',
-    title: 'Иностранным студентам',
-    description: 'Адаптация, коммуникация, академические и миграционные вопросы.',
-    colorKey: 'international',
+    slug: 'biology',
+    title: 'Биология',
+    description: 'Зоология, генетика, микробиология, гидробиология, биотехнологии.',
+    color: 'bg-imo-teal',
+    textColor: 'text-imo-teal',
+    icon: '🧬',
   },
   {
-    slug: 'other',
-    title: 'Другое / FAQ',
-    description: 'Если не нашли подходящую категорию — мы поможем маршрутизировать.',
-    colorKey: 'neutral',
+    slug: 'soil',
+    title: 'Архитектура экосистем (Почвоведение)',
+    description: 'Гидропоника, цифровое земледелие, агроэкология, кадастр.',
+    color: 'bg-amber-700',
+    textColor: 'text-amber-700',
+    icon: '🌱',
+  },
+  {
+    slug: 'robotics',
+    title: 'Мехатроника и робототехника',
+    description: 'Подводные роботы, мехатронные системы, автоматизация, САПР.',
+    color: 'bg-imo-coral',
+    textColor: 'text-imo-coral',
+    icon: '🤖',
   },
 ];

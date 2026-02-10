@@ -1,294 +1,488 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { DIRECTIONS } from '../lib/directions';
-import DirectionCard from '../components/DirectionCard';
-import ContentCard from '../components/ContentCard';
-import Logo from '../components/Logo';
-import TelegramPosts from '../components/TelegramPosts';
-import StudentOrganizations from '../components/StudentOrganizations';
-import StudentOrganizationsCard from '../components/StudentOrganizationsCard';
-import { supabase, isSupabaseConfigured, safeSupabaseQuery } from '../lib/supabaseClient';
+import Image from 'next/image';
+import { DIRECTIONS } from '@/lib/directions';
+import { getAccentColor } from '@/lib/utils';
+import info from '@/content/info.json';
+import newsData from '@/content/news.json';
+import SocialCard, { VkIcon, TgIcon } from '@/components/SocialCard';
+import {
+  WaveDivider,
+  WaveDividerSoft,
+  FloatingBubbles,
+  FloatingFish,
+  SeaweedDecor,
+  WavePattern,
+  Compass,
+} from '@/components/OceanDecorations';
 
 export default function Home() {
-  const [latestNews, setLatestNews] = useState<any[]>([]);
-  const [loadingNews, setLoadingNews] = useState(true);
-  const [supabaseError, setSupabaseError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function loadLatestNews() {
-      // Проверяем подключение Supabase
-      if (!isSupabaseConfigured()) {
-        setSupabaseError('Supabase не настроен. Пожалуйста, настройте переменные окружения.');
-        setLoadingNews(false);
-        return;
-      }
-
-      try {
-        // Безопасный запрос с обработкой ошибок
-        const { data, error: contentError } = await safeSupabaseQuery(
-          async () => {
-            const result = await supabase
-              .from('content')
-              .select('id, type, title, slug, published_at, direction_id')
-              .eq('status', 'published')
-              .eq('type', 'news')
-              .order('published_at', { ascending: false })
-              .limit(3);
-            return result;
-          },
-          'Ошибка загрузки новостей'
-        );
-
-        if (contentError) {
-          setSupabaseError(contentError);
-          setLoadingNews(false);
-          return;
-        }
-
-        if (data && data.length > 0) {
-          // Получаем названия направлений
-          const directionIds = data.map((item) => item.direction_id).filter(Boolean);
-          if (directionIds.length > 0) {
-            const { data: directions, error: dirError } = await safeSupabaseQuery(
-              async () => {
-                const result = await supabase
-                  .from('directions')
-                  .select('id, title')
-                  .in('id', directionIds);
-                return result;
-              },
-              'Ошибка загрузки направлений'
-            );
-
-            if (dirError) {
-              console.warn('Не удалось загрузить направления:', dirError);
-              // Продолжаем без направлений
-              setLatestNews(data);
-            } else if (directions) {
-              const directionsMap = new Map((directions || []).map((d: any) => [d.id, d.title]));
-
-              const enriched = data.map((item: any) => ({
-                ...item,
-                direction_title: item.direction_id ? directionsMap.get(item.direction_id) : undefined,
-              }));
-
-              setLatestNews(enriched);
-            } else {
-              setLatestNews(data);
-            }
-          } else {
-            setLatestNews(data);
-          }
-        } else {
-          // Нет новостей - это нормально, не ошибка
-          setLatestNews([]);
-        }
-      } catch (err: any) {
-        console.error('Неожиданная ошибка:', err);
-        setSupabaseError(`Неожиданная ошибка: ${err.message || 'Неизвестная ошибка'}`);
-      } finally {
-        setLoadingNews(false);
-      }
-    }
-
-    loadLatestNews();
-  }, []);
+  const latestNews = newsData.slice(0, 3);
 
   return (
-    <main className="min-h-screen bg-oss-dark light:bg-gray-50 text-white light:text-gray-900 animate-page-enter winter-main">
-      <section className="bg-oss-red py-12 sm:py-16 md:py-20 
-        light:bg-gradient-to-b light:from-white light:via-gray-50/50 light:to-white
-        light:relative light:overflow-hidden
-        light:border-b light:border-gray-200/60
-        winter-hero">
-        {/* Декоративные элементы для светлой темы - строгие геометрические формы */}
-        <div className="hidden light:block absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-          {/* Тонкие линии для структуры */}
-          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200/40 to-transparent"></div>
-          <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-gray-200/40 to-transparent"></div>
-          
-          {/* Элегантные акценты */}
-          <div className="absolute top-20 right-10 w-64 h-64 bg-oss-red/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 left-10 w-80 h-80 bg-oss-red/3 rounded-full blur-3xl"></div>
-          
-          {/* Геометрические элементы */}
-          <div className="absolute top-1/4 right-1/4 w-2 h-2 bg-oss-red/20 rounded-full"></div>
-          <div className="absolute bottom-1/4 left-1/4 w-1.5 h-1.5 bg-oss-red/15 rounded-full"></div>
-          <div className="absolute top-1/2 right-1/3 w-1 h-1 bg-oss-red/10 rounded-full"></div>
-        </div>
-        
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center relative z-10">
-          <div className="flex justify-center mb-6 sm:mb-8 animate-fade-in-down">
-            <div className="sm:hidden">
-              <Logo size={80} color="#FFFFFF" useImage={true} />
-            </div>
-            <div className="hidden sm:block">
-              <Logo size={120} color="#FFFFFF" useImage={true} />
-            </div>
+    <main className="min-h-screen bg-imo-deep text-white font-body overflow-x-hidden">
+
+      {/* ═══════════════════════════════════════════
+          СЕКЦИЯ 1 — HERO (как на ocean.study)
+          ═══════════════════════════════════════════ */}
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+        {/* Градиентный фон */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#050d1a] via-imo-navy to-imo-ocean" />
+
+        {/* Декорации */}
+        <FloatingBubbles />
+        <FloatingFish className="top-1/4 left-0 text-imo-foam" />
+        <FloatingFish className="top-2/3 left-0 text-imo-sky" />
+        <WavePattern className="top-20 left-10 wave-shimmer" />
+        <Compass className="bottom-20 right-10 slow-spin" />
+        <SeaweedDecor className="bottom-0 left-[5%] text-imo-teal" />
+        <SeaweedDecor className="bottom-0 right-[8%] text-imo-green" />
+
+        {/* Свечения */}
+        <div className="absolute top-20 -left-40 w-[500px] h-[500px] rounded-full bg-imo-ocean/20 blur-[120px]" aria-hidden="true" />
+        <div className="absolute bottom-20 -right-40 w-[400px] h-[400px] rounded-full bg-imo-sky/15 blur-[100px]" aria-hidden="true" />
+
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center py-20">
+          {/* Логотип */}
+          <div className="flex justify-center mb-8 animate-fade-in-down">
+            <Image
+              src="/Лого вектор белое.svg"
+              alt="Логотип Института Мирового Океана"
+              width={100}
+              height={100}
+              className="w-20 h-20 sm:w-24 sm:h-24 gentle-float"
+              priority
+            />
           </div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 px-2 text-white 
-            light:text-gray-900 light:font-extrabold light:tracking-tight
-            animate-fade-in-down winter-hero-title">
-            ОБЪЕДИНЕННЫЙ СОВЕТ СТУДЕНТОВ
+
+          {/* Тэглайн */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading tracking-wider mb-6 leading-[1.1] animate-fade-in-down">
+            <span className="block text-white">{info.hero.tagline.split(' в ')[0]}</span>
+            <span className="block bg-gradient-to-r from-imo-foam via-imo-sky to-imo-wave bg-clip-text text-transparent">
+              в главном восточном
+            </span>
+            <span className="block text-white">вузе страны</span>
           </h1>
-          <div className="flex items-center justify-center gap-2 mb-3 sm:mb-4 animate-fade-in-up animate-delay-100">
-            <div className="hidden light:block w-12 h-px bg-gradient-to-r from-transparent via-oss-red/30 to-oss-red/30"></div>
-            <p className="text-base sm:text-lg md:text-xl text-white/90 
-              light:text-gray-600 light:font-semibold light:uppercase light:tracking-wider light:text-sm">
-              Дальневосточный федеральный университет
-            </p>
-            <div className="hidden light:block w-12 h-px bg-gradient-to-l from-transparent via-oss-red/30 to-oss-red/30"></div>
-          </div>
-          <p className="text-sm sm:text-base md:text-lg max-w-3xl mx-auto text-white/80 mb-6 sm:mb-8 px-4 
-            light:text-gray-700 light:font-medium light:leading-relaxed animate-fade-in-up animate-delay-200">
-            Высший орган студенческого самоуправления ДВФУ. Решаем правовые,
-            инфраструктурные, стипендиальные, адаптационные и консультационные вопросы.
+
+          <p className="text-imo-foam/60 font-heading tracking-[0.3em] text-xs sm:text-sm mb-6 animate-fade-in-up delay-200">
+            {info.hero.subtitle}
           </p>
-          <div className="mt-8 sm:mt-10 flex flex-wrap justify-center gap-3 sm:gap-4 px-4">
-            <a 
-              href={process.env.NEXT_PUBLIC_TELEGRAM_BOT_URL || "https://t.me/oss_dvfu_bot"}
+
+          <p className="text-base sm:text-lg max-w-3xl mx-auto text-white/70 mb-10 leading-relaxed animate-fade-in-up delay-300 font-light">
+            {info.hero.description}
+          </p>
+
+          {/* CTA */}
+          <div className="flex flex-wrap justify-center gap-4 animate-fade-in-up delay-400">
+            <a
+              href={info.links.apply}
               target="_blank"
               rel="noopener noreferrer"
-              className="professional-button professional-button-primary px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl text-sm sm:text-base font-semibold focus-ring animate-fade-in-up animate-delay-200
-                light:shadow-[0_4px_12px_rgba(209,31,42,0.25)] light:hover:shadow-[0_8px_24px_rgba(209,31,42,0.35)]
-                flex items-center justify-center gap-2"
+              className="btn-primary bg-imo-coral text-white hover:bg-orange-500"
             >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.169 0-.315.06-.459.19l-1.15.956-2.22 1.851c-.09.08-.18.15-.27.22-.09.07-.18.13-.27.18-.09.05-.18.09-.27.12-.09.03-.18.05-.27.05-.09 0-.18-.02-.27-.05-.09-.03-.18-.07-.27-.12-.09-.05-.18-.11-.27-.18-.09-.07-.18-.14-.27-.22l-2.22-1.851-1.15-.956c-.144-.13-.29-.19-.459-.19-.169 0-.315.06-.459.19-.144.13-.229.31-.229.52 0 .21.085.39.229.52l1.15.956 2.22 1.851c.09.08.18.15.27.22.09.07.18.13.27.18.09.05.18.09.27.12.09.03.18.05.27.05.09 0 .18-.02.27-.05.09-.03.18-.07.27-.12.09-.05.18-.11.27-.18.09-.07.18-.14.27-.22l2.22-1.851 1.15-.956c.144-.13.229-.31.229-.52 0-.21-.085-.39-.229-.52-.144-.13-.29-.19-.459-.19z"/>
-              </svg>
-              Подать обращение через бот
+              Поступить
             </a>
-            <Link 
-              href="/statistics" 
-              className="professional-button professional-button-secondary px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl text-sm sm:text-base font-semibold focus-ring animate-fade-in-up animate-delay-300
-                light:bg-white light:border-2 light:border-gray-300 light:text-gray-900 
-                light:hover:bg-gray-50 light:hover:border-oss-red/40 light:hover:text-oss-red
-                light:shadow-[0_2px_8px_rgba(0,0,0,0.08)] light:hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
+            <a
+              href={info.links.official_site}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-outline text-white hover:text-imo-foam"
             >
-              Статистика
-            </Link>
-            <Link 
-              href="/cabinet" 
-              className="professional-button professional-button-secondary px-6 sm:px-8 py-3 sm:py-3.5 rounded-xl text-sm sm:text-base font-semibold focus-ring animate-fade-in-up animate-delay-400
-                light:bg-white light:border-2 light:border-gray-300 light:text-gray-900 
-                light:hover:bg-gray-50 light:hover:border-oss-red/40 light:hover:text-oss-red
-                light:shadow-[0_2px_8px_rgba(0,0,0,0.08)] light:hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)]"
-            >
-              Личный кабинет
-            </Link>
-          </div>
-          <div className="mt-4 text-center">
-            <p className="text-xs sm:text-sm text-white/60 light:text-gray-500 px-4">
-              Все обращения теперь принимаются через единый Telegram бот для удобства и оперативности
-            </p>
-          </div>
-          <div className="mt-4 sm:mt-6 flex justify-center">
-            <Link 
-              href="/about" 
-              className="text-xs sm:text-sm text-white/60 hover:text-white/90 transition-colors duration-200 
-                light:text-gray-500 light:hover:text-oss-red light:font-medium
-                flex items-center gap-1.5 animate-fade-in-up animate-delay-500
-                px-3 py-1.5 rounded-md hover:bg-white/5 light:hover:bg-gray-100/50"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              О проекте и технологиях
-            </Link>
+              ocean.study →
+            </a>
           </div>
         </div>
+
+        {/* Волна-разделитель */}
+        <WaveDivider className="absolute bottom-0 left-0 right-0 text-imo-deep z-20" />
       </section>
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <div className="flex items-end justify-between gap-4 flex-wrap mb-8">
-          <div className="animate-fade-in-up">
-            <h2 className="text-xl sm:text-2xl font-semibold text-white light:text-gray-900 light:font-bold">Направления</h2>
-            <p className="mt-2 text-sm sm:text-base text-white/70 light:text-gray-600 max-w-2xl light:font-medium leading-relaxed">
-              Цвет каждого раздела — часть навигации: он помогает быстро понять, в каком блоке вы находитесь.
-            </p>
+      {/* ═══════════════════════════════════════════
+          СЕКЦИЯ 2 — «В ИМО ТЫ СМОЖЕШЬ» (фичи)
+          ═══════════════════════════════════════════ */}
+      <section className="relative py-20 sm:py-28 bg-imo-deep">
+        <WavePattern className="top-10 right-20 wave-shimmer" />
+
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-14">
+            <h2 className="section-title text-3xl sm:text-4xl text-white mb-4">
+              В Институте Мирового <br className="hidden sm:block" />океана ты сможешь
+            </h2>
+            <div className="w-16 h-1 bg-imo-wave mx-auto rounded-full" />
           </div>
-          <Link href="/directions" className="elegant-link text-sm sm:text-base text-white/70 hover:text-white whitespace-nowrap
-            light:text-oss-red light:hover:text-oss-red/80 light:font-semibold light:flex light:items-center light:gap-1 focus-ring px-2 py-1 rounded-md animate-fade-in-up animate-delay-200">
-            Все направления <span className="light:transition-transform light:group-hover:translate-x-1">→</span>
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-stretch">
-          {DIRECTIONS.map((d, index) => {
-            const delayClass = index === 0 ? 'animate-delay-100' : index === 1 ? 'animate-delay-200' : index === 2 ? 'animate-delay-300' : index === 3 ? 'animate-delay-400' : 'animate-delay-500';
-            return (
-              <div key={d.slug} className={`animate-fade-in-up ${delayClass} flex`}>
-                <DirectionCard d={d} />
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            {info.features.map((feature) => (
+              <div
+                key={feature.title}
+                className="glass-card p-6 text-center group"
+              >
+                <span className="text-3xl sm:text-4xl block mb-3 group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
+                  {feature.icon}
+                </span>
+                <span className="text-sm sm:text-base font-medium text-imo-foam/90">{feature.title}</span>
               </div>
-            );
-          })}
-          {/* Карточка студенческих организаций */}
-          <div className="animate-fade-in-up animate-delay-500 flex">
-            <StudentOrganizationsCard />
+            ))}
           </div>
         </div>
       </section>
 
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 pb-12 sm:pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-          <div className="lg:col-span-2">
-            <div className="flex items-end justify-between gap-4 flex-wrap mb-6">
-              <div>
-                <h2 className="text-xl sm:text-2xl font-semibold text-white light:text-gray-900">Новости и гайды</h2>
-                <p className="mt-2 text-sm sm:text-base text-white/70 light:text-gray-600 max-w-2xl">
-                  Публикуем актуальную информацию и инструкции по направлениям. Цель — чтобы часть вопросов решалась без обращения.
+      {/* ═══════════════════════════════════════════
+          СЕКЦИЯ 3 — ПРОГРАММЫ БАКАЛАВРИАТА
+          ═══════════════════════════════════════════ */}
+      <section className="relative py-20 sm:py-28 overflow-hidden">
+        {/* Фоновый градиент */}
+        <div className="absolute inset-0 bg-gradient-to-b from-imo-deep via-imo-navy/50 to-imo-deep" />
+        <FloatingBubbles />
+
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="flex items-end justify-between gap-4 flex-wrap mb-12">
+            <div>
+              <p className="text-imo-sky font-heading tracking-[0.2em] text-xs mb-2">ОБРАЗОВАНИЕ</p>
+              <h2 className="section-title text-3xl sm:text-4xl text-white">Бакалавриат</h2>
+              <div className="w-12 h-1 bg-imo-wave mt-3 rounded-full" />
+            </div>
+            <Link
+              href="/programs"
+              className="text-sm text-imo-sky hover:text-imo-foam transition-colors font-heading tracking-wider"
+            >
+              ВСЕ ПРОГРАММЫ →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {DIRECTIONS.map((d) => (
+              <div
+                key={d.slug}
+                className="glass-card program-card p-6"
+                style={{ '--accent-color': getAccentColor(d.slug) } as React.CSSProperties}
+              >
+                <div className="flex items-start gap-3 mb-3">
+                  <span className="text-2xl flex-shrink-0" aria-hidden="true">{d.icon}</span>
+                  <div>
+                    <h3 className="text-base font-medium leading-snug text-white font-body">
+                      {d.title}
+                    </h3>
+                  </div>
+                </div>
+                <p className="text-sm text-white/50 leading-relaxed font-light">{d.description}</p>
+              </div>
+            ))}
+            {/* Водные биоресурсы */}
+            <div
+              className="glass-card program-card p-6"
+              style={{ '--accent-color': '#00897B' } as React.CSSProperties}
+            >
+              <div className="flex items-start gap-3 mb-3">
+                <span className="text-2xl flex-shrink-0" aria-hidden="true">🐟</span>
+                <h3 className="text-base font-medium leading-snug text-white font-body">
+                  Водные биоресурсы и аквакультура
+                </h3>
+              </div>
+              <p className="text-sm text-white/50 leading-relaxed font-light">
+                Управление рыбохозяйством, марикультура, экологический мониторинг водных объектов.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          СЕКЦИЯ 4 — ЭКСПЕДИЦИИ (Плавучий университет)
+          ═══════════════════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-imo-navy via-imo-ocean to-imo-wave" />
+        <WaveDividerSoft className="absolute top-0 text-imo-deep rotate-180" />
+        <FloatingBubbles />
+        <SeaweedDecor className="bottom-0 left-[3%] text-imo-foam" />
+
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-24 sm:py-32">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <p className="text-imo-foam/60 font-heading tracking-[0.2em] text-xs mb-3">ПЛАВУЧИЙ УНИВЕРСИТЕТ</p>
+              <h2 className="section-title text-3xl sm:text-4xl text-white mb-6">
+                {info.expeditions.title}
+              </h2>
+              <p className="section-subtitle text-white/80 mb-6 leading-relaxed">
+                {info.expeditions.description}
+              </p>
+              <a
+                href={info.expeditions.video_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outline text-white border-white/30 hover:border-imo-foam"
+                aria-label="Смотреть видео об экспедициях (откроется в новом окне)"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M6.3 2.841A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                </svg>
+                Смотреть видео
+              </a>
+            </div>
+            <div className="relative">
+              {/* Декоративная карточка-иллюстрация */}
+              <div className="glass-card p-8 text-center">
+                <div className="text-6xl mb-4" aria-hidden="true">🚢</div>
+                <h3 className="font-heading text-xl tracking-wider text-white mb-3">НИС ДВФУ</h3>
+                <p className="text-sm text-white/60 font-light leading-relaxed">
+                  Научно-исследовательские суда — ваш класс в открытом океане. Сбор проб, 
+                  анализ экосистем и работа бок о бок с международными учёными.
                 </p>
               </div>
-              <Link href="/content" className="text-sm sm:text-base text-white/70 hover:text-white transition whitespace-nowrap">
-                Все материалы →
+              <FloatingFish className="top-4 -right-10 text-imo-foam" />
+            </div>
+          </div>
+        </div>
+
+        <WaveDividerSoft className="absolute bottom-0 text-imo-deep" />
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          СЕКЦИЯ 5 — ПРАКТИКИ И СТАЖИРОВКИ
+          ═══════════════════════════════════════════ */}
+      <section className="relative py-20 sm:py-28 bg-imo-deep">
+        <WavePattern className="bottom-10 left-10 wave-shimmer" />
+
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-14">
+            <p className="text-imo-sky font-heading tracking-[0.2em] text-xs mb-2">ОПЫТ</p>
+            <h2 className="section-title text-3xl sm:text-4xl text-white mb-4">
+              {info.practices.title}
+            </h2>
+            <div className="w-16 h-1 bg-imo-wave mx-auto rounded-full" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="glass-card p-8">
+              <div className="text-3xl mb-4" aria-hidden="true">🔬</div>
+              <h3 className="font-heading text-lg tracking-wider text-white mb-3">ПОЛЕВЫЕ ПРАКТИКИ</h3>
+              <p className="text-sm text-white/60 font-light leading-relaxed">
+                {info.practices.description}
+              </p>
+            </div>
+            <div className="glass-card p-8">
+              <div className="text-3xl mb-4" aria-hidden="true">✈️</div>
+              <h3 className="font-heading text-lg tracking-wider text-white mb-3">МЕЖДУНАРОДНЫЕ СТАЖИРОВКИ</h3>
+              <p className="text-sm text-white/60 font-light leading-relaxed">
+                {info.practices.international}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          СЕКЦИЯ 6 — КАМПУС
+          ═══════════════════════════════════════════ */}
+      <section className="relative overflow-hidden py-20 sm:py-28">
+        <div className="absolute inset-0 bg-gradient-to-b from-imo-deep via-imo-navy/40 to-imo-deep" />
+        <Compass className="top-10 left-10 slow-spin" />
+
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Карточка с фактами */}
+            <div>
+              <p className="text-imo-coral font-heading tracking-[0.2em] text-xs mb-2">ОСТРОВ РУССКИЙ</p>
+              <h2 className="section-title text-3xl sm:text-4xl text-white mb-6">
+                {info.campus.title}
+              </h2>
+              <ul className="space-y-4">
+                {info.campus.facts.map((fact) => (
+                  <li key={fact} className="flex items-start gap-3 text-white/80 font-light">
+                    <span className="text-imo-wave mt-0.5 text-lg flex-shrink-0" aria-hidden="true">▸</span>
+                    <span className="text-sm leading-relaxed">{fact}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Иллюстрация кампуса */}
+            <div className="glass-card p-8 text-center">
+              <div className="text-5xl mb-4" aria-hidden="true">🏛️</div>
+              <div className="grid grid-cols-2 gap-4 mt-6">
+                <div className="text-center">
+                  <div className="text-2xl font-heading text-imo-foam">10 000+</div>
+                  <div className="text-xs text-white/50 mt-1">мест в общежитиях</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-heading text-imo-foam">200</div>
+                  <div className="text-xs text-white/50 mt-1">гектаров кампуса</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-heading text-imo-foam">8</div>
+                  <div className="text-xs text-white/50 mt-1">учебных корпусов</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-heading text-imo-coral">2 860 ₽</div>
+                  <div className="text-xs text-white/50 mt-1">проживание / мес.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          СЕКЦИЯ 7 — СТИПЕНДИИ
+          ═══════════════════════════════════════════ */}
+      <section className="relative py-16 sm:py-20 bg-imo-deep">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="glass-card p-8 sm:p-10 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-imo-ocean via-imo-wave to-imo-sky" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div>
+                <p className="text-imo-wave font-heading tracking-[0.2em] text-xs mb-2">ПОДДЕРЖКА</p>
+                <h2 className="section-title text-2xl sm:text-3xl text-white mb-4">
+                  {info.stipends.title}
+                </h2>
+                <ul className="space-y-3">
+                  {info.stipends.facts.map((fact) => (
+                    <li key={fact} className="flex items-start gap-3 text-white/80 font-light">
+                      <span className="text-imo-coral mt-0.5" aria-hidden="true">💰</span>
+                      <span className="text-sm leading-relaxed">{fact}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="text-center">
+                <div className="inline-block">
+                  <div className="text-5xl sm:text-6xl font-heading bg-gradient-to-r from-imo-foam to-imo-sky bg-clip-text text-transparent">
+                    30 000 ₽
+                  </div>
+                  <div className="text-sm text-white/50 mt-2 font-light">максимальная партнёрская стипендия</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          СЕКЦИЯ 8 — НОВОСТИ
+          ═══════════════════════════════════════════ */}
+      {latestNews.length > 0 && (
+        <section className="relative py-20 sm:py-28 bg-imo-deep">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6">
+            <div className="flex items-end justify-between gap-4 flex-wrap mb-12">
+              <div>
+                <p className="text-imo-sky font-heading tracking-[0.2em] text-xs mb-2">АКТУАЛЬНО</p>
+                <h2 className="section-title text-3xl sm:text-4xl text-white">Новости</h2>
+                <div className="w-12 h-1 bg-imo-wave mt-3 rounded-full" />
+              </div>
+              <Link
+                href="/news"
+                className="text-sm text-imo-sky hover:text-imo-foam transition-colors font-heading tracking-wider"
+              >
+                ВСЕ НОВОСТИ →
               </Link>
             </div>
 
-            {supabaseError ? (
-              <div className="rounded-2xl sm:rounded-3xl border border-yellow-500/50 bg-yellow-500/10 p-6 sm:p-8 md:p-10 text-center">
-                <div className="text-yellow-400 font-semibold mb-2 text-sm sm:text-base">⚠️ Предупреждение</div>
-                <div className="text-white/80 mb-4 text-sm sm:text-base">{supabaseError}</div>
-                <div className="text-xs sm:text-sm text-white/60">
-                  Пожалуйста, настройте Supabase согласно инструкции в{' '}
-                  <a href="/docs/SUPABASE_SETUP.md" className="text-yellow-400 hover:underline">
-                    docs/SUPABASE_SETUP.md
-                  </a>
-                </div>
-              </div>
-            ) : loadingNews ? (
-              <div className="text-center text-white/50 py-8 text-sm sm:text-base">Загрузка новостей...</div>
-            ) : latestNews.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {latestNews.map((item) => (
-                  <ContentCard
-                    key={item.id}
-                    title={item.title}
-                    slug={item.slug}
-                    type={item.type}
-                    direction={item.direction_title}
-                    publishedAt={item.published_at}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="rounded-2xl sm:rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8 md:p-10 text-center text-white/50 text-sm sm:text-base">
-                Пока нет опубликованных новостей
-              </div>
-            )}
-          </div>
-          
-          <div className="lg:col-span-1">
-            <div className="light:premium-card light:rounded-2xl light:p-6 light:sticky light:top-24">
-              <TelegramPosts limit={3} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {latestNews.map((item) => (
+                <article key={item.id} className="glass-card p-6 group">
+                  <time className="text-xs text-imo-foam/50 font-body" dateTime={item.date}>
+                    {new Date(item.date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  </time>
+                  <h3 className="text-base font-medium mt-2 mb-2 leading-snug text-white group-hover:text-imo-sky transition-colors font-body">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-white/50 leading-relaxed font-light">{item.intro}</p>
+                </article>
+              ))}
             </div>
+          </div>
+        </section>
+      )}
+
+      {/* ═══════════════════════════════════════════
+          СЕКЦИЯ 9 — СОЦСЕТИ
+          ═══════════════════════════════════════════ */}
+      <section className="relative py-16 sm:py-20 bg-imo-deep">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-10">
+            <h2 className="section-title text-2xl sm:text-3xl text-white mb-4">
+              Ресурсы и соцсети
+            </h2>
+            <p className="section-subtitle text-white/50 max-w-xl mx-auto text-sm">
+              Следите за новостями школы и студенческого совета ИМО
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <SocialCard
+              href={info.links.vk_school}
+              title="ВКонтакте школы"
+              desc="Новости и объявления"
+              icon={<VkIcon />}
+              color="bg-[#4C75A3]"
+            />
+            <SocialCard
+              href={info.links.telegram_school}
+              title="Telegram школы"
+              desc="Оперативная информация"
+              icon={<TgIcon />}
+              color="bg-[#2AABEE]"
+            />
+            <SocialCard
+              href={info.links.vk_student_council}
+              title="ВК студсовета"
+              desc="Мероприятия и активности"
+              icon={<VkIcon />}
+              color="bg-[#4C75A3]"
+            />
+            <SocialCard
+              href={info.links.telegram_student_council}
+              title="Telegram студсовета"
+              desc="Чат и новости"
+              icon={<TgIcon />}
+              color="bg-[#2AABEE]"
+            />
           </div>
         </div>
       </section>
 
-      <div id="student-organizations">
-        <StudentOrganizations />
-      </div>
+      {/* ═══════════════════════════════════════════
+          СЕКЦИЯ 10 — CTA «ПОСТУПИТЬ»
+          ═══════════════════════════════════════════ */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-imo-ocean via-imo-wave to-imo-sky" />
+        <WaveDividerSoft className="absolute top-0 text-imo-deep rotate-180" />
+        <FloatingBubbles />
+
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-24 sm:py-32 text-center">
+          <Image
+            src="/Лого вектор белое.svg"
+            alt="ИМО"
+            width={60}
+            height={60}
+            className="w-14 h-14 mx-auto mb-6 opacity-80 gentle-float"
+          />
+          <h2 className="section-title text-3xl sm:text-4xl md:text-5xl text-white mb-4">
+            Присоединяйся к ИМО
+          </h2>
+          <p className="section-subtitle text-white/80 mb-10 max-w-2xl mx-auto">
+            Кампус на острове Русский, море под окнами, морские экспедиции, стипендии до 30 000 ₽ 
+            и стажировки в вузах Кореи, Японии и Китая.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <a
+              href={info.links.apply}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary bg-white text-imo-navy hover:bg-imo-foam"
+            >
+              Поступить в ИМО
+            </a>
+            <a
+              href={info.links.official_site}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-outline text-white border-white/40 hover:border-white/70"
+            >
+              ocean.study →
+            </a>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
