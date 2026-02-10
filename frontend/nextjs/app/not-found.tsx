@@ -9,7 +9,7 @@ export default function NotFound() {
   return (
     <main className="min-h-screen bg-imo-deep text-white flex items-center justify-center px-4">
       <div className="text-center max-w-md">
-        <div className="text-8xl font-heading bg-gradient-to-r from-imo-foam via-imo-sky to-imo-wave bg-clip-text text-transparent mb-4">
+        <div className="text-8xl font-heading text-imo-neon neon-glow mb-4">
           404
         </div>
         <h1 className="font-heading text-2xl tracking-wider mb-4">
@@ -19,10 +19,10 @@ export default function NotFound() {
           Эта страница могла быть перемещена или удалена. Проверьте адрес или вернитесь на главную.
         </p>
         <div className="flex flex-wrap justify-center gap-4">
-          <Link href="/" className="btn-primary bg-imo-ocean text-white hover:bg-imo-wave">
+          <Link href="/" className="btn-primary bg-imo-ocean text-white border-2 border-imo-ocean">
             На главную
           </Link>
-          <Link href="/programs" className="btn-outline text-white border-white/30 hover:border-imo-foam">
+          <Link href="/programs" className="btn-outline text-white border-white/30">
             Программы
           </Link>
         </div>
