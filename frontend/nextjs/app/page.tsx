@@ -394,6 +394,60 @@ export default function Home() {
       )}
 
       {/* ═══════════════════════════════════════════
+          СЕКЦИЯ 8.5 — ДЛЯ СТУДЕНТОВ (баннер)
+          ═══════════════════════════════════════════ */}
+      <section className="relative py-16 sm:py-20 bg-imo-deep overflow-hidden">
+        <DotMatrix className="top-4 left-10" />
+        <HexagonDecor className="bottom-4 right-10" />
+
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="brutal-card p-8 sm:p-10 brutal-border-neon relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-imo-neon via-imo-lime to-imo-sky" />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div>
+                <p className="text-imo-lime font-heading tracking-[0.2em] text-xs mb-2">УЖЕ УЧИШЬСЯ В ИМО?</p>
+                <h2 className="font-heading text-2xl sm:text-3xl tracking-wide text-white mb-4">
+                  ВСЁ ДЛЯ СТУДЕНТОВ
+                </h2>
+                <p className="text-white/60 font-light text-sm leading-relaxed mb-6">
+                  Быстрый доступ к LMS, расписанию, библиотеке и другим сервисам.
+                  Гайды по общежитию, стипендиям, документам и советы первокурсникам.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <Link href="/for-students" className="btn-primary bg-imo-neon text-imo-deep border-2 border-imo-neon text-xs">
+                    ПОЛЕЗНЫЕ ССЫЛКИ
+                  </Link>
+                  <Link href="/guides" className="btn-outline text-imo-neon border-imo-neon/40 text-xs">
+                    ГАЙДЫ СТУДЕНТА →
+                  </Link>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="border-2 border-white/5 p-4 text-center">
+                  <div className="text-2xl mb-2" aria-hidden="true">📚</div>
+                  <div className="text-xs text-white/50">LMS и учёба</div>
+                </div>
+                <div className="border-2 border-white/5 p-4 text-center">
+                  <div className="text-2xl mb-2" aria-hidden="true">🏠</div>
+                  <div className="text-xs text-white/50">Общежитие</div>
+                </div>
+                <div className="border-2 border-white/5 p-4 text-center">
+                  <div className="text-2xl mb-2" aria-hidden="true">💰</div>
+                  <div className="text-xs text-white/50">Стипендии</div>
+                </div>
+                <div className="border-2 border-white/5 p-4 text-center">
+                  <div className="text-2xl mb-2" aria-hidden="true">🎓</div>
+                  <div className="text-xs text-white/50">Первокурсникам</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
           СЕКЦИЯ 9 — СОЦСЕТИ
           ═══════════════════════════════════════════ */}
       <section className="relative py-16 sm:py-20 bg-imo-deep">
