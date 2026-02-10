@@ -17,7 +17,7 @@ export default function Error({
     <main className="min-h-screen bg-imo-deep text-white flex items-center justify-center px-4">
       <div className="text-center max-w-md">
         <div className="text-6xl mb-6">🌊</div>
-        <h1 className="font-heading text-3xl tracking-wider mb-4">
+        <h1 className="font-heading text-3xl tracking-wider mb-4 glitch-text" data-text="ПРОИЗОШЛА ОШИБКА">
           ПРОИЗОШЛА ОШИБКА
         </h1>
         <p className="text-white/60 font-light mb-8 leading-relaxed">
@@ -26,11 +26,11 @@ export default function Error({
         <div className="flex flex-wrap justify-center gap-4">
           <button
             onClick={reset}
-            className="btn-primary bg-imo-coral text-white hover:bg-orange-500"
+            className="btn-primary bg-imo-coral text-white border-2 border-imo-coral"
           >
             Попробовать снова
           </button>
-          <a href="/" className="btn-outline text-white border-white/30 hover:border-imo-foam">
+          <a href="/" className="btn-outline text-white border-white/30">
             На главную
           </a>
         </div>
