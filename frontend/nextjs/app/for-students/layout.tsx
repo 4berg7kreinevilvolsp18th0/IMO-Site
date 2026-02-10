@@ -12,3 +12,9 @@ export const metadata: Metadata = {
 };
 
 export default function ForStudentsLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return children;
+}
