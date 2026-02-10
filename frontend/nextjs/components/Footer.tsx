@@ -45,10 +45,12 @@ export default function Footer() {
             </div>
           </nav>
 
-          {/* Ресурсы школы */}
+          {/* Студентам */}
           <div>
-            <h4 className="font-heading text-imo-neon/60 text-[11px] tracking-[0.15em] mb-4">РЕСУРСЫ ШКОЛЫ</h4>
+            <h4 className="font-heading text-imo-neon/60 text-[11px] tracking-[0.15em] mb-4">СТУДЕНТАМ</h4>
             <div className="flex flex-col gap-2.5">
+              <FooterLink href="/for-students" label="Полезные ссылки" />
+              <FooterLink href="/guides" label="Гайды студента" />
               <FooterLink href={info.links.vk_school} label="ВКонтакте школы" external />
               <FooterLink href={info.links.telegram_school} label="Telegram школы" external />
               <FooterLink href={info.links.official_site} label="ocean.study" external />
