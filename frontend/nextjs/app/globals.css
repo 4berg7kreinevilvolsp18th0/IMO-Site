@@ -17,12 +17,16 @@
   --font-body: var(--font-ubuntu), 'Ubuntu', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-brutal: cubic-bezier(0.2, 0, 0, 1);
   --color-deep: #0A1628;
   --color-navy: #0C2340;
   --color-ocean: #1565C0;
   --color-wave: #1E88E5;
   --color-sky: #42A5F5;
   --color-foam: #90CAF9;
+  --color-neon: #00FFE0;
+  --color-magenta: #FF00FF;
+  --color-lime: #CCFF00;
 }
 
 * { box-sizing: border-box; }
@@ -48,7 +52,7 @@ h1, h2, h3, h4, h5, h6 {
 
 a {
   text-decoration: none;
-  transition: all 0.3s var(--ease-out-quart);
+  transition: all 0.25s var(--ease-brutal);
 }
 
 /* Утилитарные классы шрифтов */
@@ -66,24 +70,21 @@ a {
    FOCUS & ДОСТУПНОСТЬ
    ============================================ */
 
-/* Глобальный focus-visible для всех интерактивных элементов */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2px solid rgba(30, 136, 229, 0.8);
+  outline: 2px solid var(--color-neon);
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 0;
 }
 
-/* Скрытие аутлайна при клике мышью, показ при табе */
 :focus:not(:focus-visible) {
   outline: none;
 }
 
-/* Skip to content */
 .skip-to-content {
   position: absolute;
   top: -100%;
@@ -91,12 +92,12 @@ select:focus-visible,
   transform: translateX(-50%);
   z-index: 100;
   padding: 0.75rem 1.5rem;
-  background: var(--color-ocean);
-  color: white;
-  border-radius: 0 0 0.5rem 0.5rem;
+  background: var(--color-neon);
+  color: var(--color-deep);
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 700;
   transition: top 0.2s;
+  border: 2px solid white;
 }
 
 .skip-to-content:focus {
@@ -128,19 +129,19 @@ select:focus-visible,
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.8s var(--ease-out-expo) forwards;
+  animation: fadeInUp 0.6s var(--ease-brutal) forwards;
 }
 
 .animate-fade-in-down {
-  animation: fadeInDown 0.8s var(--ease-out-expo) forwards;
+  animation: fadeInDown 0.6s var(--ease-brutal) forwards;
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.6s var(--ease-out-expo) forwards;
+  animation: fadeIn 0.5s var(--ease-brutal) forwards;
 }
 
 .animate-scale-in {
-  animation: scaleIn 0.7s var(--ease-out-expo) forwards;
+  animation: scaleIn 0.5s var(--ease-brutal) forwards;
 }
 
 /* Задержки */
@@ -152,156 +153,267 @@ select:focus-visible,
 .delay-600 { animation-delay: 0.6s; }
 
 /* ============================================
-   АНИМАЦИИ — МОРСКАЯ ТЕМАТИКА
+   АНИМАЦИИ — НЕОБРУТАЛИЗМ
    ============================================ */
 
-/* Пузыри */
-@keyframes bubbleFloat {
-  0%   { transform: translateY(100%) scale(0); opacity: 0; }
-  10%  { opacity: 0.6; transform: translateY(80%) scale(1); }
-  90%  { opacity: 0.3; }
-  100% { transform: translateY(-20%) scale(0.8); opacity: 0; }
+/* Глитч-эффект текста */
+@keyframes glitch {
+  0%, 100% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0);
+  }
+  20% {
+    clip-path: inset(20% 0 60% 0);
+    transform: translate(-3px, 2px);
+  }
+  40% {
+    clip-path: inset(60% 0 5% 0);
+    transform: translate(3px, -1px);
+  }
+  60% {
+    clip-path: inset(40% 0 30% 0);
+    transform: translate(-2px, 1px);
+  }
+  80% {
+    clip-path: inset(10% 0 70% 0);
+    transform: translate(2px, -2px);
+  }
 }
 
-.bubble {
-  position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(144,202,249,0.4), rgba(66,165,245,0.1));
-  border: 1px solid rgba(144,202,249,0.15);
-  animation: bubbleFloat linear infinite;
+@keyframes glitchColor {
+  0%, 100% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0);
+    opacity: 0;
+  }
+  20% {
+    clip-path: inset(30% 0 50% 0);
+    transform: translate(4px, -1px);
+    opacity: 0.7;
+  }
+  40% {
+    clip-path: inset(70% 0 5% 0);
+    transform: translate(-4px, 2px);
+    opacity: 0.5;
+  }
+  60% {
+    clip-path: inset(10% 0 60% 0);
+    transform: translate(3px, 1px);
+    opacity: 0.6;
+  }
+  80% {
+    clip-path: inset(50% 0 20% 0);
+    transform: translate(-3px, -1px);
+    opacity: 0;
+  }
 }
 
-.bubble-1 { width: 8px; height: 8px; left: 10%; animation-duration: 12s; animation-delay: 0s; }
-.bubble-2 { width: 12px; height: 12px; left: 25%; animation-duration: 10s; animation-delay: 2s; }
-.bubble-3 { width: 6px; height: 6px; left: 40%; animation-duration: 14s; animation-delay: 4s; }
-.bubble-4 { width: 10px; height: 10px; left: 55%; animation-duration: 11s; animation-delay: 1s; }
-.bubble-5 { width: 7px; height: 7px; left: 70%; animation-duration: 13s; animation-delay: 3s; }
-.bubble-6 { width: 14px; height: 14px; left: 85%; animation-duration: 9s; animation-delay: 5s; }
-.bubble-7 { width: 5px; height: 5px; left: 15%; animation-duration: 15s; animation-delay: 6s; }
-.bubble-8 { width: 9px; height: 9px; left: 60%; animation-duration: 11s; animation-delay: 7s; }
-
-/* Рыбы плывут */
-@keyframes fishSwim {
-  0%   { transform: translateX(-100px) scaleX(1); opacity: 0; }
-  10%  { opacity: 0.2; }
-  50%  { opacity: 0.15; }
-  90%  { opacity: 0.1; }
-  100% { transform: translateX(calc(100vw + 100px)) scaleX(1); opacity: 0; }
+/* Неоновый пульс */
+@keyframes neonPulse {
+  0%, 100% {
+    text-shadow:
+      0 0 4px rgba(0, 255, 224, 0.4),
+      0 0 8px rgba(0, 255, 224, 0.2);
+  }
+  50% {
+    text-shadow:
+      0 0 8px rgba(0, 255, 224, 0.6),
+      0 0 20px rgba(0, 255, 224, 0.3),
+      0 0 40px rgba(0, 255, 224, 0.15);
+  }
 }
 
-.fish-swim {
-  animation: fishSwim 20s linear infinite;
+/* Сканлайн */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
 }
 
-/* Водоросли колышутся */
-@keyframes seaweedSway {
-  0%, 100% { transform: rotate(-3deg); }
-  50%      { transform: rotate(3deg); }
+/* Движение неоновой сетки */
+@keyframes gridDrift {
+  0%   { transform: translate(0, 0); }
+  50%  { transform: translate(-10px, -10px); }
+  100% { transform: translate(0, 0); }
 }
 
-.seaweed-sway {
-  animation: seaweedSway 4s ease-in-out infinite;
-  transform-origin: bottom center;
-}
-
-/* Мерцание волн */
-@keyframes waveShimmer {
+/* Мерцание точек */
+@keyframes dotPulse {
   0%, 100% { opacity: 0.03; }
-  50%      { opacity: 0.07; }
+  50%      { opacity: 0.08; }
 }
 
-.wave-shimmer {
-  animation: waveShimmer 6s ease-in-out infinite;
-}
-
-/* Медленное вращение (компас) */
-@keyframes slowSpin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-.slow-spin {
-  animation: slowSpin 60s linear infinite;
-}
-
-/* Плавное движение вверх-вниз */
-@keyframes gentleFloat {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-15px); }
-}
-
-.gentle-float {
-  animation: gentleFloat 5s ease-in-out infinite;
+/* Неоновая линия — горизонтальный пробег */
+@keyframes neonSweep {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateX(100vw); opacity: 0; }
 }
 
 /* ============================================
-   REDUCED MOTION — уважаем настройки пользователя
+   УТИЛИТЫ — НЕОБРУТАЛИЗМ
    ============================================ */
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  .gentle-float,
-  .slow-spin,
-  .wave-shimmer,
-  .seaweed-sway,
-  .fish-swim,
-  .bubble {
-    animation: none !important;
-  }
-}
-
-/* ============================================
-   СТЕКЛЯННЫЕ КАРТОЧКИ (glassmorphism)
-   ============================================ */
-
-.glass-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 1rem;
-  transition: all 0.4s var(--ease-out-quart);
-}
-
-.glass-card:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(30, 136, 229, 0.3);
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-}
-
-/* Карточка направления с цветным акцентом */
-.program-card {
+/* Глитч-заголовок */
+.glitch-text {
   position: relative;
-  overflow: hidden;
+  display: inline-block;
 }
 
-.program-card::before {
-  content: '';
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
   position: absolute;
   top: 0;
   left: 0;
-  width: 4px;
+  width: 100%;
   height: 100%;
-  background: var(--accent-color, var(--color-wave));
-  border-radius: 4px 0 0 4px;
-  transition: width 0.3s var(--ease-out-quart);
+  pointer-events: none;
 }
 
-.program-card:hover::before {
-  width: 6px;
+.glitch-text::before {
+  color: var(--color-neon);
+  animation: glitchColor 4s infinite;
+  animation-delay: 0.1s;
+}
+
+.glitch-text::after {
+  color: var(--color-magenta);
+  animation: glitchColor 4s infinite;
+  animation-delay: 0.3s;
+}
+
+/* Неоновое свечение текста */
+.neon-glow {
+  text-shadow:
+    0 0 4px rgba(0, 255, 224, 0.5),
+    0 0 12px rgba(0, 255, 224, 0.2);
+}
+
+.neon-glow-pulse {
+  animation: neonPulse 3s ease-in-out infinite;
+}
+
+/* Сканлайн оверлей */
+.scanlines {
+  position: relative;
+}
+
+.scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 224, 0.02) 2px,
+    rgba(0, 255, 224, 0.02) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Неоновый сканлайн (бегущая полоса) */
+.scanline-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-neon), transparent);
+  animation: scanline 8s linear infinite;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Движение сетки */
+.grid-drift {
+  animation: gridDrift 20s ease-in-out infinite;
+}
+
+/* Неоновый sweep */
+.neon-sweep {
+  animation: neonSweep 15s linear infinite;
+}
+
+/* Точечный пульс */
+.dot-pulse {
+  animation: dotPulse 5s ease-in-out infinite;
 }
 
 /* ============================================
-   КНОПКИ CTA В СТИЛЕ БРЕНДБУКА
+   БРУТАЛЬНЫЕ КАРТОЧКИ
+   ============================================ */
+
+.brutal-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+  box-shadow: 4px 4px 0 rgba(0, 255, 224, 0.15);
+  transition: all 0.25s var(--ease-brutal);
+  position: relative;
+}
+
+.brutal-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(0, 255, 224, 0.4);
+  box-shadow: 0 0 0 rgba(0, 255, 224, 0);
+  transform: translate(4px, 4px);
+}
+
+/* Вариант карточки со скруглённым углом */
+.brutal-card-rounded {
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0 0 1.5rem 0;
+  box-shadow: 4px 4px 0 rgba(0, 255, 224, 0.15);
+  transition: all 0.25s var(--ease-brutal);
+}
+
+.brutal-card-rounded:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(0, 255, 224, 0.4);
+  box-shadow: 0 0 0 rgba(0, 255, 224, 0);
+  transform: translate(4px, 4px);
+}
+
+/* Карточка направления (программы) — accent-colored shadow */
+.program-card {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+  box-shadow: 4px 4px 0 var(--accent-color, rgba(0, 255, 224, 0.4));
+  transition: all 0.25s var(--ease-brutal);
+}
+
+.program-card:hover {
+  border-color: var(--accent-color, rgba(0, 255, 224, 0.5));
+  box-shadow: 0 0 0 var(--accent-color, rgba(0, 255, 224, 0));
+  transform: translate(4px, 4px);
+}
+
+/* Обратная совместимость: glass-card мапится на brutal-card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0;
+  box-shadow: 4px 4px 0 rgba(0, 255, 224, 0.15);
+  transition: all 0.25s var(--ease-brutal);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(0, 255, 224, 0.4);
+  box-shadow: 0 0 0 rgba(0, 255, 224, 0);
+  transform: translate(4px, 4px);
+}
+
+/* ============================================
+   КНОПКИ CTA — НЕОБРУТАЛИЗМ
    ============================================ */
 
 .btn-primary {
@@ -309,19 +421,20 @@ select:focus-visible,
   align-items: center;
   gap: 0.5rem;
   padding: 0.875rem 2rem;
-  border-radius: 0.75rem;
+  border-radius: 0;
   font-family: var(--font-heading);
   font-size: 0.875rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-weight: 400;
-  transition: all 0.3s var(--ease-out-quart);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  border: 2px solid transparent;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.4);
+  transition: all 0.2s var(--ease-brutal);
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 }
 
 .btn-outline {
@@ -329,20 +442,22 @@ select:focus-visible,
   align-items: center;
   gap: 0.5rem;
   padding: 0.875rem 2rem;
-  border-radius: 0.75rem;
+  border-radius: 0;
   font-family: var(--font-heading);
   font-size: 0.875rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-weight: 400;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.3s var(--ease-out-quart);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 4px 4px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.2s var(--ease-brutal);
 }
 
 .btn-outline:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.5);
+  border-color: var(--color-neon);
+  color: var(--color-neon);
+  box-shadow: 0 0 20px rgba(0, 255, 224, 0.2);
+  transform: translate(2px, 2px);
 }
 
 /* ============================================
@@ -363,24 +478,56 @@ select:focus-visible,
 }
 
 /* ============================================
-   СКРОЛЛБАР
+   СКРОЛЛБАР — НЕОБРУТАЛИЗМ
    ============================================ */
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
   background: var(--color-deep);
+  border-left: 2px solid rgba(0, 255, 224, 0.1);
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-navy);
-  border-radius: 4px;
+  border: 2px solid rgba(0, 255, 224, 0.2);
+  border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-ocean);
+  border-color: var(--color-neon);
+}
+
+/* ============================================
+   REDUCED MOTION — уважаем настройки пользователя
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .glitch-text::before,
+  .glitch-text::after {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+
+  .neon-glow-pulse,
+  .grid-drift,
+  .dot-pulse,
+  .neon-sweep,
+  .scanline-bar {
+    animation: none !important;
+  }
 }
 
 /* ============================================
@@ -393,10 +540,11 @@ select:focus-visible,
     color: black !important;
   }
 
+  .brutal-card,
   .glass-card {
     background: transparent !important;
-    backdrop-filter: none !important;
     border: 1px solid #ccc !important;
+    box-shadow: none !important;
   }
 
   header, footer {
