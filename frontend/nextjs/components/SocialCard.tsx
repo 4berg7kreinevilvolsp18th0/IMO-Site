@@ -15,13 +15,13 @@ export default function SocialCard({ href, title, desc, icon, color }: SocialCar
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`${title} — ${desc}`}
-      className="glass-card flex items-start gap-4 p-5 group"
+      className="brutal-card flex items-start gap-4 p-5 group"
     >
-      <div className={`flex-shrink-0 w-10 h-10 rounded-xl ${color} flex items-center justify-center`}>
+      <div className={`flex-shrink-0 w-10 h-10 ${color} flex items-center justify-center shadow-brutal-sm`}>
         {icon}
       </div>
       <div>
-        <div className="font-medium text-white group-hover:text-imo-sky transition-colors text-sm">{title}</div>
+        <div className="font-medium text-white group-hover:text-imo-neon transition-colors text-sm">{title}</div>
         <div className="text-xs text-white/40 mt-0.5 font-light">{desc}</div>
       </div>
     </a>
