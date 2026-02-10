@@ -39,7 +39,7 @@ export default function ActionButtons() {
       {/* Проекты */}
       {sc.links.projects.length > 0 && (
         <div>
-          <h3 className="font-heading text-sm tracking-[0.15em] text-white/60 mb-3">ПРОЕКТЫ</h3>
+          <h3 className="font-heading text-sm tracking-[0.15em] text-imo-neon/60 mb-3">ПРОЕКТЫ</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {sc.links.projects.map((p) => (
               <a
@@ -47,12 +47,12 @@ export default function ActionButtons() {
                 href={p.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass-card flex items-start gap-4 p-5 group"
+                className="brutal-card flex items-start gap-4 p-5 group"
                 aria-label={`${p.title} — ${p.desc}`}
               >
                 <span className="text-2xl flex-shrink-0" aria-hidden="true">{p.icon}</span>
                 <div>
-                  <div className="font-medium text-white group-hover:text-imo-sky transition-colors text-sm">
+                  <div className="font-medium text-white group-hover:text-imo-neon transition-colors text-sm">
                     {p.title}
                   </div>
                   <div className="text-xs text-white/40 mt-0.5 font-light">{p.desc}</div>
@@ -85,15 +85,15 @@ function ActionLink({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={`${title} — ${desc}`}
-      className="glass-card flex items-center gap-4 p-5 group"
+      className="brutal-card flex items-center gap-4 p-5 group"
     >
       <div
-        className={`flex-shrink-0 w-12 h-12 rounded-xl ${color} flex items-center justify-center shadow-lg`}
+        className={`flex-shrink-0 w-12 h-12 ${color} flex items-center justify-center shadow-brutal-sm`}
       >
         {icon}
       </div>
       <div>
-        <div className="font-medium text-white group-hover:text-imo-sky transition-colors text-sm">
+        <div className="font-medium text-white group-hover:text-imo-neon transition-colors text-sm">
           {title}
         </div>
         <div className="text-xs text-white/40 mt-0.5 font-light">{desc}</div>
