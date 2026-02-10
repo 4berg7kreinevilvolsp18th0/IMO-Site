@@ -28,11 +28,6 @@ module.exports = {
           teal: "#00897B",       // бирюзовый (для карточек)
           green: "#2E7D32",      // зелёный (экология)
         },
-        // Обратная совместимость
-        oss: {
-          red: "#1565C0",
-          dark: "#0A1628",
-        },
       },
       backgroundImage: {
         'gradient-ocean': 'linear-gradient(135deg, #0C2340 0%, #1565C0 50%, #1E88E5 100%)',

@@ -1,29 +1,23 @@
-# WORKPLAN / Декомпозиция по этапам
+# WORKPLAN / Декомпозиция по этапам — Сайт ИМО ДВФУ
 
-## Этап A — Скелет
-- Поднять Next.js + Tailwind
-- Зафиксировать палитру и типографику
-- Сверстать layout + навигацию
+## Этап A — Скелет (готово)
+- Next.js + Tailwind
+- Палитра и типографика ИМО
+- Layout + навигация (Header, Footer)
+- Главная страница, программы, новости, о школе, контакты
 
-## Этап B — Supabase
-- Применить schema.sql
-- Включить RLS
-- Добавить seed.sql
+## Этап B — Контент (готово)
+- JSON-контент (info.json, news.json)
+- Программы бакалавриата и магистратуры
+- Морская тематика (OceanDecorations)
 
-## Этап C — Обращения
-- /appeal + валидация
-- public_token + /appeal/status
-- /admin/appeals (таблица/канбан)
+## Этап C — SEO и доступность (готово)
+- Метаданные на всех страницах
+- sitemap.xml, robots.txt
+- ARIA-атрибуты, skip-to-content, focus-visible
+- prefers-reduced-motion
 
-## Этап D — Контент
-- CMS
-- /content и /content/[slug]
-- Подразделы в направлениях
-
-## Этап E — Дашборды
-- /statistics (публично)
-- /admin/dashboards (внутренне)
-
-## Этап F — Деплой
-- Vercel prod + staging
+## Этап D — Деплой
+- Vercel prod
+- Подключение домена
 - Документация и передача
