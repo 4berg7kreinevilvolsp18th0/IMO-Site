@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { href: '/programs', label: 'Программы' },
   { href: '/news', label: 'Новости' },
   { href: '/about', label: 'О школе' },
+  { href: '/for-students', label: 'Для студентов' },
   { href: '/student-council', label: 'Студсовет' },
   { href: '/contacts', label: 'Контакты' },
 ];
