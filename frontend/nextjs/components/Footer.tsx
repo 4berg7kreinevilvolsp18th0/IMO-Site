@@ -59,6 +59,10 @@ export default function Footer() {
           <div>
             <h4 className="font-heading text-white/60 text-[11px] tracking-[0.15em] mb-4">СТУДСОВЕТ</h4>
             <div className="flex flex-col gap-2.5">
+              <FooterLink href="/student-council" label="О студсовете" />
+              <FooterLink href="/student-council/team" label="Состав" />
+              <FooterLink href="/student-council/documents" label="Документы" />
+              <FooterLink href="/student-council/contacts" label="Контакты студсовета" />
               <FooterLink href={info.links.vk_student_council} label="ВК студсовета" external />
               <FooterLink href={info.links.telegram_student_council} label="Telegram студсовета" external />
             </div>
