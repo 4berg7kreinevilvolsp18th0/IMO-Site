@@ -23,7 +23,7 @@
   },
   "deployment": {
     "hosting": "Vercel",
-    "domain": "imo-dvfu.vercel.app",
+    "domain": "imo-site.vercel.app",
     "auto-deploy": "git push → автоматический деплой"
   },
   "development": {

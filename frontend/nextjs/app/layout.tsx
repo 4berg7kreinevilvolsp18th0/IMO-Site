@@ -11,7 +11,7 @@ const ubuntu = Ubuntu({
   variable: '--font-ubuntu',
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://imo-dvfu.vercel.app';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://imo-site.vercel.app';
 
 export const metadata: Metadata = {
   title: {

@@ -28,7 +28,7 @@ jobs:
       - name: Build project
         working-directory: ./frontend/nextjs
         env:
-          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://imo-dvfu.vercel.app' }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL || 'https://imo-site.vercel.app' }}
         run: npm run build
 
       - name: Deploy to Vercel
