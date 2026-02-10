@@ -1,27 +1,12 @@
-/* Декоративные SVG-элементы в стиле ocean.study */
+/* Декоративные элементы — необрутализм + абстрактный океан */
 
-export function WaveDivider({ className = '', flip = false }: { className?: string; flip?: boolean }) {
+/**
+ * AngularDivider — зигзагообразный разделитель секций
+ * Заменяет WaveDivider / WaveDividerSoft
+ */
+export function AngularDivider({ className = '', flip = false }: { className?: string; flip?: boolean }) {
   return (
     <div className={`w-full overflow-hidden leading-[0] ${flip ? 'rotate-180' : ''} ${className}`}>
-      <svg
-        viewBox="0 0 1440 120"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-auto"
-        preserveAspectRatio="none"
-      >
-        <path
-          d="M0 60L48 55C96 50 192 40 288 45C384 50 480 70 576 75C672 80 768 70 864 55C960 40 1056 20 1152 25C1248 30 1344 60 1392 75L1440 90V120H0V60Z"
-          fill="currentColor"
-        />
-      </svg>
-    </div>
-  );
-}
-
-export function WaveDividerSoft({ className = '' }: { className?: string }) {
-  return (
-    <div className={`w-full overflow-hidden leading-[0] ${className}`}>
       <svg
         viewBox="0 0 1440 80"
         fill="none"
@@ -29,93 +14,148 @@ export function WaveDividerSoft({ className = '' }: { className?: string }) {
         className="w-full h-auto"
         preserveAspectRatio="none"
       >
-        <path
-          d="M0 40C240 80 480 0 720 40C960 80 1200 0 1440 40V80H0V40Z"
+        {/* Зигзаг — ступенчатая линия */}
+        <polygon
+          points="0,80 0,60 120,60 120,30 240,30 240,50 360,50 360,20 480,20 480,45 600,45 600,15 720,15 720,55 840,55 840,25 960,25 960,40 1080,40 1080,10 1200,10 1200,50 1320,50 1320,35 1440,35 1440,80"
           fill="currentColor"
         />
+        {/* Неоновая линия по краю зигзага */}
+        <polyline
+          points="0,60 120,60 120,30 240,30 240,50 360,50 360,20 480,20 480,45 600,45 600,15 720,15 720,55 840,55 840,25 960,25 960,40 1080,40 1080,10 1200,10 1200,50 1320,50 1320,35 1440,35"
+          stroke="rgba(0, 255, 224, 0.3)"
+          strokeWidth="2"
+          fill="none"
+        />
       </svg>
     </div>
   );
 }
 
-export function FloatingBubbles() {
+/**
+ * NeonGrid — абстрактная сетка из неоновых точек и линий
+ * Заменяет FloatingBubbles
+ */
+export function NeonGrid() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-      {/* Пузыри разных размеров */}
-      <div className="bubble bubble-1" />
-      <div className="bubble bubble-2" />
-      <div className="bubble bubble-3" />
-      <div className="bubble bubble-4" />
-      <div className="bubble bubble-5" />
-      <div className="bubble bubble-6" />
-      <div className="bubble bubble-7" />
-      <div className="bubble bubble-8" />
+      <svg
+        className="absolute inset-0 w-full h-full opacity-[0.04] grid-drift"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <pattern id="neonGrid" width="60" height="60" patternUnits="userSpaceOnUse">
+            <circle cx="30" cy="30" r="1" fill="#00FFE0" />
+            <line x1="0" y1="30" x2="60" y2="30" stroke="#00FFE0" strokeWidth="0.3" opacity="0.5" />
+            <line x1="30" y1="0" x2="30" y2="60" stroke="#00FFE0" strokeWidth="0.3" opacity="0.5" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#neonGrid)" />
+      </svg>
+      {/* Горизонтальные неоновые полосы */}
+      <div className="absolute top-[20%] left-0 w-full h-px bg-gradient-to-r from-transparent via-imo-neon/10 to-transparent" />
+      <div className="absolute top-[60%] left-0 w-full h-px bg-gradient-to-r from-transparent via-imo-magenta/5 to-transparent" />
+      <div className="absolute top-[80%] left-0 w-full h-px bg-gradient-to-r from-transparent via-imo-neon/5 to-transparent" />
     </div>
   );
 }
 
-export function FloatingFish({ className = '' }: { className?: string }) {
+/**
+ * GlitchLine — горизонтальная неоновая полоса с глитчем
+ * Заменяет FloatingFish
+ */
+export function GlitchLine({ className = '' }: { className?: string }) {
   return (
     <div className={`absolute pointer-events-none ${className}`} aria-hidden="true">
-      <svg width="60" height="30" viewBox="0 0 60 30" fill="none" className="fish-swim opacity-20">
-        <ellipse cx="25" cy="15" rx="20" ry="10" fill="currentColor" />
-        <polygon points="45,15 60,5 60,25" fill="currentColor" />
-        <circle cx="18" cy="12" r="2" fill="#0A1628" />
-      </svg>
+      <div className="w-32 h-[2px] bg-gradient-to-r from-imo-neon via-imo-sky to-transparent neon-sweep opacity-40" />
     </div>
   );
 }
 
-export function SeaweedDecor({ className = '' }: { className?: string }) {
+/**
+ * DotMatrix — точечный паттерн
+ * Заменяет WavePattern
+ */
+export function DotMatrix({ className = '' }: { className?: string }) {
   return (
-    <div className={`absolute pointer-events-none ${className}`} aria-hidden="true">
-      <svg width="40" height="120" viewBox="0 0 40 120" fill="none" className="seaweed-sway opacity-15">
-        <path
-          d="M20 120C20 120 5 90 15 70C25 50 5 30 20 0"
-          stroke="currentColor"
-          strokeWidth="3"
-          strokeLinecap="round"
-          fill="none"
-        />
-        <path
-          d="M25 120C25 120 35 85 25 65C15 45 35 25 25 5"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          fill="none"
-          opacity="0.7"
-        />
+    <div className={`absolute pointer-events-none opacity-[0.04] dot-pulse ${className}`} aria-hidden="true">
+      <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
+        {Array.from({ length: 10 }, (_, row) =>
+          Array.from({ length: 10 }, (_, col) => (
+            <circle
+              key={`${row}-${col}`}
+              cx={col * 20 + 10}
+              cy={row * 20 + 10}
+              r="1.5"
+              fill="#00FFE0"
+            />
+          ))
+        )}
       </svg>
     </div>
   );
 }
 
-export function WavePattern({ className = '' }: { className?: string }) {
-  return (
-    <div className={`absolute pointer-events-none opacity-[0.04] ${className}`} aria-hidden="true">
-      <svg width="400" height="200" viewBox="0 0 400 200" fill="none">
-        <path d="M0 100C50 60 100 140 150 100C200 60 250 140 300 100C350 60 400 140 400 100" stroke="white" strokeWidth="1.5" fill="none" />
-        <path d="M0 120C50 80 100 160 150 120C200 80 250 160 300 120C350 80 400 160 400 120" stroke="white" strokeWidth="1" fill="none" />
-        <path d="M0 140C50 100 100 180 150 140C200 100 250 180 300 140C350 100 400 180 400 140" stroke="white" strokeWidth="0.5" fill="none" />
-      </svg>
-    </div>
-  );
-}
-
-export function Compass({ className = '' }: { className?: string }) {
+/**
+ * HexagonDecor — геометрическая декорация
+ * Заменяет Compass
+ */
+export function HexagonDecor({ className = '' }: { className?: string }) {
   return (
     <div className={`absolute pointer-events-none opacity-[0.06] ${className}`} aria-hidden="true">
       <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
-        <circle cx="100" cy="100" r="90" stroke="white" strokeWidth="1" />
-        <circle cx="100" cy="100" r="70" stroke="white" strokeWidth="0.5" />
-        <line x1="100" y1="5" x2="100" y2="195" stroke="white" strokeWidth="0.5" />
-        <line x1="5" y1="100" x2="195" y2="100" stroke="white" strokeWidth="0.5" />
-        <polygon points="100,15 105,40 95,40" fill="white" opacity="0.5" />
-        <text x="100" y="12" textAnchor="middle" fill="white" fontSize="10" opacity="0.5">N</text>
-        <text x="100" y="198" textAnchor="middle" fill="white" fontSize="10" opacity="0.5">S</text>
-        <text x="8" y="104" textAnchor="middle" fill="white" fontSize="10" opacity="0.5">W</text>
-        <text x="192" y="104" textAnchor="middle" fill="white" fontSize="10" opacity="0.5">E</text>
+        {/* Внешний шестиугольник */}
+        <polygon
+          points="100,10 177,55 177,145 100,190 23,145 23,55"
+          stroke="#00FFE0"
+          strokeWidth="1"
+          fill="none"
+        />
+        {/* Внутренний */}
+        <polygon
+          points="100,40 148,65 148,135 100,160 52,135 52,65"
+          stroke="#00FFE0"
+          strokeWidth="0.5"
+          fill="none"
+        />
+        {/* Центральная точка */}
+        <circle cx="100" cy="100" r="3" fill="#00FFE0" opacity="0.5" />
+        {/* Лучи к вершинам */}
+        <line x1="100" y1="100" x2="100" y2="10" stroke="#00FFE0" strokeWidth="0.3" opacity="0.3" />
+        <line x1="100" y1="100" x2="177" y2="55" stroke="#00FFE0" strokeWidth="0.3" opacity="0.3" />
+        <line x1="100" y1="100" x2="177" y2="145" stroke="#00FFE0" strokeWidth="0.3" opacity="0.3" />
+        <line x1="100" y1="100" x2="100" y2="190" stroke="#00FFE0" strokeWidth="0.3" opacity="0.3" />
+        <line x1="100" y1="100" x2="23" y2="145" stroke="#00FFE0" strokeWidth="0.3" opacity="0.3" />
+        <line x1="100" y1="100" x2="23" y2="55" stroke="#00FFE0" strokeWidth="0.3" opacity="0.3" />
       </svg>
     </div>
   );
 }
+
+/**
+ * ScanlineOverlay — полупрозрачные горизонтальные полоски
+ */
+export function ScanlineOverlay() {
+  return (
+    <div className="absolute inset-0 pointer-events-none z-[1]" aria-hidden="true">
+      <div className="absolute inset-0 scanlines" />
+      <div className="scanline-bar" />
+    </div>
+  );
+}
+
+/* =========================================
+   Обратная совместимость — экспорт под
+   старыми именами (маппинг на новые)
+   ========================================= */
+
+export const WaveDivider = AngularDivider;
+export const WaveDividerSoft = AngularDivider;
+export const FloatingBubbles = NeonGrid;
+export function FloatingFish({ className = '' }: { className?: string }) {
+  return <GlitchLine className={className} />;
+}
+export function SeaweedDecor({ className: _className = '' }: { className?: string }) {
+  return null; // убрано в необрутальном стиле
+}
+export const WavePattern = DotMatrix;
+export const Compass = HexagonDecor;
