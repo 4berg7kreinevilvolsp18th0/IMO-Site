@@ -27,10 +27,10 @@ export default function StudentCouncilNav() {
             <Link
               key={link.href}
               href={link.href}
-              className={`text-xs sm:text-sm px-4 py-2 rounded-lg font-heading tracking-wider transition-all duration-300 ${
+              className={`text-xs sm:text-sm px-4 py-2 font-heading tracking-wider transition-all duration-200 border-2 ${
                 isActive
-                  ? 'bg-imo-ocean text-white shadow-lg shadow-imo-ocean/30'
-                  : 'text-white/60 hover:text-white hover:bg-white/10'
+                  ? 'bg-imo-neon/10 text-imo-neon border-imo-neon/40 shadow-brutal-sm'
+                  : 'text-white/60 border-transparent hover:text-imo-neon hover:border-imo-neon/20'
               }`}
               aria-current={isActive ? 'page' : undefined}
             >
