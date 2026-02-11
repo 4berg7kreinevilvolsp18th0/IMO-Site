@@ -3,6 +3,46 @@
 @tailwind utilities;
 
 /* ============================================
+   ШРИФТ NASALIZATION — ЛОКАЛЬНАЯ КОПИЯ
+   ============================================ */
+@font-face {
+  font-family: 'Nasalization';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Nasalization'),
+       url('/fonts/NASALIZA.woff') format('woff');
+  font-display: swap;
+}
+
+/* ============================================
+   ЧИТАЕМОСТЬ — увеличенный текст, мягкие цвета
+   ============================================ */
+@layer base {
+  html {
+    font-size: 17px;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+}
+
+/* Повышение читаемости: делаем полупрозрачный текст светлее */
+.text-white\/30 { --tw-text-opacity: 0.45 !important; }
+.text-white\/40 { --tw-text-opacity: 0.55 !important; }
+.text-white\/50 { --tw-text-opacity: 0.65 !important; }
+.text-white\/60 { --tw-text-opacity: 0.72 !important; }
+.text-white\/70 { --tw-text-opacity: 0.8 !important; }
+.text-white\/80 { --tw-text-opacity: 0.88 !important; }
+
+/* Увеличиваем мелкий текст */
+.text-xs  { font-size: 0.8125rem !important; line-height: 1.3rem !important; }
+.text-sm  { font-size: 0.9375rem !important; line-height: 1.45rem !important; }
+.text-\[10px\] { font-size: 0.6875rem !important; }
+.text-\[11px\] { font-size: 0.75rem !important; }
+
+/* ============================================
    ШРИФТЫ БРЕНДБУКА ИМО
    Nasalization — заголовки (CDN Fonts, загружается через <link> в layout)
    Ubuntu — основной текст (next/font в layout)
