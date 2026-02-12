@@ -61,7 +61,7 @@ export default function GuidesPage() {
 
         {/* Ссылка на полезное */}
         <div className="mt-16 brutal-card p-8 sm:p-10 brutal-border-neon text-center relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-imo-magenta via-imo-neon to-imo-sky" />
+          <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-imo-ocean via-imo-neon to-imo-sky" />
           <p className="text-imo-coral font-heading tracking-[0.2em] text-xs mb-2">СЕРВИСЫ</p>
           <h2 className="font-heading text-2xl sm:text-3xl tracking-wide text-white mb-4">
             НУЖЕН БЫСТРЫЙ ДОСТУП?
