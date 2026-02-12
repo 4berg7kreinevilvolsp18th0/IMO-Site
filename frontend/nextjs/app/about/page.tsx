@@ -50,7 +50,7 @@ export default function AboutPage() {
       {/* Описание */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
         <div className="brutal-card p-8 sm:p-10 mb-12 relative overflow-hidden brutal-border-neon">
-          <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-imo-neon via-imo-sky to-imo-magenta" />
+          <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-imo-neon via-imo-sky to-imo-sky" />
           <p className="text-white/80 leading-[1.8] mb-5 font-light text-base">
             В Институте Мирового океана ДВФУ вы окажетесь в научно-образовательном центре Ocean Science
             и смежных наук. Можете изучать биологию и экологию, науки о Земле, заниматься мехатроникой
@@ -131,7 +131,7 @@ export default function AboutPage() {
             </p>
             <p className="text-white/80 text-sm mb-6 font-light">
               <strong className="font-medium">Email:</strong>{' '}
-              <a href={`mailto:${info.contacts.email}`} className="text-imo-neon hover:text-imo-lime transition-colors">
+              <a href={`mailto:${info.contacts.email}`} className="text-imo-neon hover:text-imo-coral transition-colors">
                 {info.contacts.email}
               </a>
             </p>
