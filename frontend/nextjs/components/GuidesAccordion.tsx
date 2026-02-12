@@ -19,7 +19,7 @@ const CAT_ACCENTS = [
   'border-imo-neon/40 text-imo-neon',
   'border-imo-coral/40 text-imo-coral',
   'border-imo-sky/40 text-imo-sky',
-  'border-imo-lime/40 text-imo-lime',
+  'border-imo-coral/40 text-imo-coral',
   'border-imo-neon/40 text-imo-neon',
 ];
 
@@ -32,7 +32,7 @@ function renderAnswer(text: string) {
     // Ссылки вида [text](url)
     const withLinks = line.replace(
       /\[([^\]]+)\]\(([^)]+)\)/g,
-      '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-imo-neon hover:text-imo-lime transition-colors underline underline-offset-2">$1</a>'
+      '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-imo-neon hover:text-imo-coral transition-colors underline underline-offset-2">$1</a>'
     );
 
     // Жирный текст **text**
