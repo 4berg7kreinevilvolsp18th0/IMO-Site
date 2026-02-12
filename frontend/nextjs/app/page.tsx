@@ -37,7 +37,7 @@ export default function Home() {
 
         {/* Свечения */}
         <div className="absolute top-20 -left-40 w-[500px] h-[500px] rounded-full bg-imo-neon/5 blur-[120px]" aria-hidden="true" />
-        <div className="absolute bottom-20 -right-40 w-[400px] h-[400px] rounded-full bg-imo-magenta/5 blur-[100px]" aria-hidden="true" />
+        <div className="absolute bottom-20 -right-40 w-[400px] h-[400px] rounded-full bg-imo-sky/5 blur-[100px]" aria-hidden="true" />
 
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center py-20">
           {/* Логотип */}
@@ -145,7 +145,7 @@ export default function Home() {
             </div>
             <Link
               href="/programs"
-              className="text-sm text-imo-neon hover:text-imo-lime transition-colors font-heading tracking-wider"
+              className="text-sm text-imo-neon hover:text-imo-coral transition-colors font-heading tracking-wider"
             >
               ВСЕ ПРОГРАММЫ &rarr;
             </Link>
@@ -192,7 +192,7 @@ export default function Home() {
           СЕКЦИЯ 4 — ЭКСПЕДИЦИИ (Плавучий университет)
           ═══════════════════════════════════════════ */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-imo-navy via-imo-ocean to-imo-wave" />
+        <div className="absolute inset-0 bg-gradient-to-r from-imo-navy via-imo-ocean to-imo-neon" />
         <AngularDivider className="absolute top-0 text-imo-deep" flip />
         <NeonGrid />
 
@@ -327,7 +327,7 @@ export default function Home() {
       <section className="relative py-16 sm:py-20 bg-imo-deep">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="brutal-card p-8 sm:p-10 relative overflow-hidden brutal-border-neon">
-            <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-imo-neon via-imo-sky to-imo-magenta" />
+            <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-imo-neon via-imo-sky to-imo-sky" />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>
                 <p className="text-imo-neon font-heading tracking-[0.2em] text-xs mb-2">ПОДДЕРЖКА</p>
@@ -370,7 +370,7 @@ export default function Home() {
               </div>
               <Link
                 href="/news"
-                className="text-sm text-imo-neon hover:text-imo-lime transition-colors font-heading tracking-wider"
+                className="text-sm text-imo-neon hover:text-imo-coral transition-colors font-heading tracking-wider"
               >
                 ВСЕ НОВОСТИ &rarr;
               </Link>
@@ -402,11 +402,11 @@ export default function Home() {
 
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="brutal-card p-8 sm:p-10 brutal-border-neon relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-imo-neon via-imo-lime to-imo-sky" />
+            <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-imo-neon via-imo-coral to-imo-sky" />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>
-                <p className="text-imo-lime font-heading tracking-[0.2em] text-xs mb-2">УЖЕ УЧИШЬСЯ В ИМО?</p>
+                <p className="text-imo-coral font-heading tracking-[0.2em] text-xs mb-2">УЖЕ УЧИШЬСЯ В ИМО?</p>
                 <h2 className="font-heading text-2xl sm:text-3xl tracking-wide text-white mb-4">
                   ВСЁ ДЛЯ СТУДЕНТОВ
                 </h2>
@@ -498,7 +498,7 @@ export default function Home() {
           СЕКЦИЯ 10 — CTA «ПОСТУПИТЬ»
           ═══════════════════════════════════════════ */}
       <section className="relative overflow-hidden scanlines">
-        <div className="absolute inset-0 bg-gradient-to-r from-imo-ocean via-imo-wave to-imo-sky" />
+        <div className="absolute inset-0 bg-gradient-to-r from-imo-ocean via-imo-neon to-imo-sky" />
         <AngularDivider className="absolute top-0 text-imo-deep" flip />
         <NeonGrid />
 
