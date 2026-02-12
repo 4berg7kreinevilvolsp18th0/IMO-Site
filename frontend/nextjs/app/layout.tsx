@@ -2,14 +2,6 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import type { Metadata } from 'next';
-import { Ubuntu } from 'next/font/google';
-
-const ubuntu = Ubuntu({
-  subsets: ['cyrillic', 'latin'],
-  weight: ['300', '400', '500', '700'],
-  display: 'swap',
-  variable: '--font-ubuntu',
-});
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://imo-site.vercel.app';
 
