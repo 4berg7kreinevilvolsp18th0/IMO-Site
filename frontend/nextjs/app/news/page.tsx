@@ -46,7 +46,7 @@ export default function NewsPage() {
                 className="brutal-card p-6 sm:p-8 relative overflow-hidden group"
               >
                 {/* Акцентная полоса сверху */}
-                <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-imo-neon to-imo-magenta opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-imo-neon to-imo-coral opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                 <div className="flex items-start gap-4">
                   {/* Дата слева */}
