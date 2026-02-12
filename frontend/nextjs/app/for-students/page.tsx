@@ -25,8 +25,8 @@ const resources: ResourceCategory[] = resourcesData as ResourceCategory[];
 const CATEGORY_COLORS = [
   { border: 'border-imo-neon/40', shadow: 'shadow-brutal', accent: 'text-imo-neon', bg: 'bg-imo-neon/5' },
   { border: 'border-imo-coral/40', shadow: 'shadow-brutal-coral', accent: 'text-imo-coral', bg: 'bg-imo-coral/5' },
-  { border: 'border-imo-sky/40', shadow: 'shadow-brutal', accent: 'text-imo-sky', bg: 'bg-imo-sky/5' },
-  { border: 'border-imo-lime/40', shadow: 'shadow-brutal-lime', accent: 'text-imo-lime', bg: 'bg-imo-lime/5' },
+  { border: 'border-imo-neon-cyan/40', shadow: 'shadow-brutal', accent: 'text-imo-neon-cyan', bg: 'bg-imo-neon-cyan/5' },
+  { border: 'border-imo-coral/40', shadow: 'shadow-brutal-coral', accent: 'text-imo-coral', bg: 'bg-imo-coral/5' },
   { border: 'border-imo-neon/40', shadow: 'shadow-brutal', accent: 'text-imo-neon', bg: 'bg-imo-neon/5' },
   { border: 'border-imo-coral/40', shadow: 'shadow-brutal-coral', accent: 'text-imo-coral', bg: 'bg-imo-coral/5' },
 ];
@@ -105,7 +105,7 @@ export default function ForStudentsPage() {
             <p className="text-white/40 text-lg">Ничего не найдено по запросу &laquo;{search}&raquo;</p>
             <button
               onClick={() => setSearch('')}
-              className="mt-4 text-imo-neon hover:text-imo-lime transition-colors text-sm"
+              className="mt-4 text-imo-neon hover:text-imo-coral transition-colors text-sm"
             >
               Сбросить поиск
             </button>
@@ -184,7 +184,7 @@ export default function ForStudentsPage() {
         <div className="mt-16 relative">
           <DotMatrix className="top-0 right-10" />
           <div className="brutal-card p-8 sm:p-10 brutal-border-neon text-center relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-imo-neon via-imo-sky to-imo-magenta" />
+            <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-imo-neon via-imo-neon-cyan to-imo-neon-cyan" />
             <p className="text-imo-neon font-heading tracking-[0.2em] text-xs mb-2">FAQ</p>
             <h2 className="font-heading text-2xl sm:text-3xl tracking-wide text-white mb-4">
               ЕСТЬ ВОПРОСЫ?
