@@ -43,7 +43,7 @@ export default function ProgramsPage() {
           </h1>
           <p className="text-white/60 font-light max-w-2xl mx-auto">
             7 программ бакалавриата и 9 программ магистратуры. Подробности на{' '}
-            <a href={info.links.official_site} target="_blank" rel="noopener noreferrer" className="text-imo-neon hover:text-imo-lime transition-colors">
+            <a href={info.links.official_site} target="_blank" rel="noopener noreferrer" className="text-imo-neon hover:text-imo-coral transition-colors">
               ocean.study
             </a>.
           </p>
