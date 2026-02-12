@@ -47,7 +47,7 @@ export default function ContactsPage() {
                 <div className="text-xs text-imo-neon/40 font-heading tracking-wider mb-0.5">EMAIL</div>
                 <a
                   href={`mailto:${sc.contacts.email}`}
-                  className="text-sm text-imo-neon hover:text-imo-lime transition-colors"
+                  className="text-sm text-imo-neon hover:text-imo-coral transition-colors"
                 >
                   {sc.contacts.email}
                 </a>
