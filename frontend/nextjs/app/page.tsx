@@ -44,7 +44,7 @@ export default function Home() {
           <div className="flex justify-center mb-8 animate-fade-in-down">
             <div className="border-2 border-imo-neon/30 p-3 shadow-brutal">
               <Image
-                src="/Лого вектор белое.svg"
+                src="/logos/logo-imo.svg"
                 alt="Логотип Института Мирового Океана"
                 width={100}
                 height={100}
@@ -505,7 +505,7 @@ export default function Home() {
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-24 sm:py-32 text-center">
           <div className="border-2 border-white/20 p-3 inline-block mb-6">
             <Image
-              src="/Лого вектор белое.svg"
+              src="/logos/logo-imo.svg"
               alt="ИМО"
               width={60}
               height={60}

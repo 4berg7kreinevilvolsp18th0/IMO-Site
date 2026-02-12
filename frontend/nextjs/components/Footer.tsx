@@ -16,7 +16,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-3 mb-4">
               <Image
-                src="/Лого вектор белое.svg"
+                src="/logos/logo-imo.svg"
                 alt="ИМО"
                 width={32}
                 height={32}

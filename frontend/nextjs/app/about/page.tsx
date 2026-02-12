@@ -25,7 +25,7 @@ export default function AboutPage() {
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <div className="border-2 border-imo-neon/30 p-3 inline-block mb-5 shadow-brutal">
             <Image
-              src="/Лого вектор белое.svg"
+              src="/logos/logo-imo.svg"
               alt="ИМО"
               width={64}
               height={64}

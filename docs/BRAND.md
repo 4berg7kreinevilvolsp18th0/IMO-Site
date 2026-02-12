@@ -48,5 +48,10 @@
 
 ## Логотип
 
-SVG-логотип хранится в `/frontend/nextjs/public/Лого вектор белое.svg`.
+Логотипы хранятся в `frontend/nextjs/public/logos/`:
+- `logo-imo.svg` — основной SVG (белый на тёмном)
+- `logo-imo.png` — растровый вариант
+- `icon.svg` — иконка
+
+Путь в коде: `/logos/logo-imo.svg`
 Использовать белый вариант на тёмном фоне.

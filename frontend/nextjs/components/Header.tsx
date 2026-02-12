@@ -67,7 +67,7 @@ export default function Header() {
         {/* Логотип ИМО */}
         <Link href="/" className="flex items-center gap-3 group">
           <Image
-            src="/Лого вектор белое.svg"
+            src="/logos/logo-imo.svg"
             alt="ИМО ДВФУ — на главную"
             width={36}
             height={36}

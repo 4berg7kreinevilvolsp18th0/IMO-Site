@@ -43,7 +43,7 @@ export default function ContactsPage() {
           <div className="brutal-card p-8 relative overflow-hidden brutal-border-neon">
             <div className="flex items-center gap-3 mb-5">
               <Image
-                src="/Лого вектор белое.svg"
+                src="/logos/logo-imo.svg"
                 alt="ИМО"
                 width={36}
                 height={36}
