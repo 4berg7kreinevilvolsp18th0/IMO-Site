@@ -58,7 +58,7 @@ export default function ContactsPage() {
               </p>
               <p className="text-sm text-white/60 font-light flex items-start gap-2">
                 <span className="text-imo-neon mt-0.5" aria-hidden="true">&#x25B8;</span>
-                <a href={`mailto:${info.contacts.email}`} className="text-imo-neon hover:text-imo-lime transition-colors">
+                <a href={`mailto:${info.contacts.email}`} className="text-imo-neon hover:text-imo-coral transition-colors">
                   {info.contacts.email}
                 </a>
               </p>
@@ -71,7 +71,7 @@ export default function ContactsPage() {
               href={info.links.official_site}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-imo-neon hover:text-imo-lime text-lg font-heading tracking-wider transition-colors neon-glow"
+              className="text-imo-neon hover:text-imo-coral text-lg font-heading tracking-wider transition-colors neon-glow"
               aria-label="Официальный сайт ИМО — ocean.study"
             >
               OCEAN.STUDY
