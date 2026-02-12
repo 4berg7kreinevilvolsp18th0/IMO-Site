@@ -64,18 +64,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className={ubuntu.variable}>
+    <html lang="ru" className="">
       <head>
         <link rel="icon" href="/favicon.ico" />
-        {/* Шрифты: Nasalization (заголовки) + Ubuntu (текст) */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap"
-        />
       </head>
-      <body className={`bg-imo-deep text-white antialiased font-body ${ubuntu.variable}`}>
+      <body className="bg-imo-deep text-white antialiased font-body">
         <a href="#main-content" className="skip-to-content">
           Перейти к содержимому
         </a>
