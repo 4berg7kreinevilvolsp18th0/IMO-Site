@@ -58,7 +58,7 @@ export default function Header() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-imo-deep/95 backdrop-blur-sm border-b-2 border-imo-neon/30 shadow-[0_2px_0_rgba(0,255,224,0.15)]'
+          ? 'bg-imo-deep/95 backdrop-blur-sm border-b-2 border-imo-neon/30 shadow-[0_2px_0_rgba(0,255,224,0.3)]'
           : 'bg-transparent'
       }`}
       role="banner"
