@@ -1,6 +1,7 @@
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { ThemeProvider } from '@/lib/ThemeContext';
 import type { Metadata } from 'next';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://imo-site.vercel.app';
@@ -64,19 +65,26 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className="">
+    <html lang="ru" className="" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.ico" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){var t=localStorage.getItem('imo-theme');if(t==='light')document.documentElement.classList.add('light');})();`,
+          }}
+        />
       </head>
-      <body className="bg-imo-deep text-white antialiased font-body">
-        <a href="#main-content" className="skip-to-content">
-          Перейти к содержимому
-        </a>
-        <Header />
-        <div id="main-content">
-          {children}
-        </div>
-        <Footer />
+      <body className="bg-imo-deep text-white antialiased font-body light:bg-[#F5F3F0] light:text-imo-deep transition-colors duration-300">
+        <ThemeProvider>
+          <a href="#main-content" className="skip-to-content">
+            Перейти к содержимому
+          </a>
+          <Header />
+          <div id="main-content">
+            {children}
+          </div>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );
