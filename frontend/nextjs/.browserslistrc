@@ -1,0 +1,10 @@
+# Поддержка современных и относительно старых браузеров
+# Autoprefixer и Babel используют этот список
+
+last 2 versions
+> 1%
+not dead
+Chrome >= 60
+Firefox >= 60
+Safari >= 12
+Edge >= 79
