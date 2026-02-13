@@ -12,6 +12,11 @@ import {
   DotMatrix,
   HexagonDecor,
   ScanlineOverlay,
+  FishSchool,
+  MarineLife,
+  Bubbles,
+  AnimatedWaves,
+  FloatingIcons,
 } from '@/components/OceanDecorations';
 
 export default function Home() {
@@ -33,6 +38,10 @@ export default function Home() {
         <GlitchLine className="top-2/3 left-0" />
         <DotMatrix className="top-20 left-10" />
         <HexagonDecor className="bottom-20 right-10" />
+        <MarineLife creatures={['fish', 'dolphin', 'fish', 'shark', 'octopus', 'whale', 'fish']} />
+        <FloatingIcons icons={info.features.map((f) => f.icon)} className="opacity-50" />
+        <Bubbles count={15} />
+        <AnimatedWaves />
         <ScanlineOverlay />
 
         {/* Свечения */}
@@ -195,6 +204,8 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-imo-navy via-imo-ocean to-imo-neon" />
         <AngularDivider className="absolute top-0 text-imo-deep" flip />
         <NeonGrid />
+        <MarineLife creatures={['fish', 'whale', 'dolphin', 'shark']} className="opacity-40" />
+        <Bubbles count={8} />
 
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-24 sm:py-32">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -501,6 +512,8 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-imo-ocean via-imo-neon to-imo-sky" />
         <AngularDivider className="absolute top-0 text-imo-deep" flip />
         <NeonGrid />
+        <MarineLife creatures={['fish', 'octopus', 'dolphin', 'fish']} className="opacity-35" />
+        <Bubbles count={10} />
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-24 sm:py-32 text-center">
           <div className="border-2 border-white/20 p-3 inline-block mb-6">
