@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect, useCallback, useRef } from 'react';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const NAV_LINKS = [
   { href: '/', label: 'Главная' },
@@ -58,8 +59,8 @@ export default function Header() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-imo-deep/95 backdrop-blur-sm border-b-2 border-imo-neon/30 shadow-[0_2px_0_rgba(0,255,224,0.3)]'
-          : 'bg-transparent'
+          ? 'bg-imo-deep/95 backdrop-blur-sm border-b-2 border-imo-neon/30 shadow-[0_2px_0_rgba(0,255,224,0.3)] light:bg-[#F5F3F0]/95 light:border-imo-ocean/30 light:shadow-[0_2px_0_rgba(0,129,180,0.2)]'
+          : 'bg-transparent light:bg-transparent'
       }`}
       role="banner"
     >
@@ -71,13 +72,13 @@ export default function Header() {
             alt="ИМО ДВФУ — на главную"
             width={36}
             height={36}
-            className="w-8 h-8 sm:w-9 sm:h-9 transition-transform group-hover:translate-x-1"
+            className="w-8 h-8 sm:w-9 sm:h-9 transition-transform group-hover:translate-x-1 light:invert"
           />
           <span className="hidden sm:flex flex-col leading-none">
-            <span className="font-heading text-sm sm:text-base tracking-[0.15em] text-white group-hover:text-imo-neon transition-colors">
+            <span className="font-heading text-sm sm:text-base tracking-[0.15em] text-white group-hover:text-imo-neon transition-colors light:text-imo-deep light:group-hover:text-imo-ocean">
               ИМО
             </span>
-            <span className="text-[10px] text-imo-foam/60 font-body tracking-wider mt-0.5">
+            <span className="text-[10px] text-imo-foam/60 font-body tracking-wider mt-0.5 light:text-imo-deep/70">
               ДВФУ
             </span>
           </span>
@@ -89,7 +90,7 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-white/70 hover:text-imo-neon font-body font-medium px-3 py-2 transition-colors duration-200 relative after:absolute after:bottom-0 after:left-3 after:right-3 after:h-[2px] after:bg-imo-neon after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200"
+              className="text-sm text-white/70 hover:text-imo-neon font-body font-medium px-3 py-2 transition-colors duration-200 relative after:absolute after:bottom-0 after:left-3 after:right-3 after:h-[2px] after:bg-imo-neon after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-200 light:text-imo-deep/80 light:hover:text-imo-ocean light:after:bg-imo-ocean"
             >
               {link.label}
             </Link>
@@ -98,16 +99,21 @@ export default function Header() {
             href="https://ocean.study/"
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-3 text-xs px-4 py-2 bg-imo-neon/10 text-imo-neon font-heading tracking-[0.1em] border-2 border-imo-neon/40 shadow-brutal-sm hover:bg-imo-neon hover:text-imo-deep hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none transition-all duration-200"
+            className="ml-3 text-xs px-4 py-2 bg-imo-neon/10 text-imo-neon font-heading tracking-[0.1em] border-2 border-imo-neon/40 shadow-brutal-sm hover:bg-imo-neon hover:text-imo-deep hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none transition-all duration-200 light:bg-imo-ocean/15 light:text-imo-ocean light:border-imo-ocean/40 light:hover:bg-imo-ocean light:hover:text-white"
             aria-label="Официальный сайт ocean.study (открывается в новом окне)"
           >
             OCEAN.STUDY
           </a>
+          <div className="ml-2">
+            <ThemeToggle />
+          </div>
         </nav>
 
         {/* Мобильное меню — кнопка */}
-        <button
-          className="md:hidden p-2 border-2 border-white/20 hover:border-imo-neon hover:text-imo-neon transition-colors"
+        <div className="flex items-center gap-2 md:hidden">
+          <ThemeToggle />
+            <button
+          className="p-2 border-2 border-white/20 hover:border-imo-neon hover:text-imo-neon transition-colors light:border-imo-deep/20 light:hover:border-imo-ocean light:hover:text-imo-ocean"
           onClick={toggleMenu}
           aria-label={open ? 'Закрыть меню' : 'Открыть меню'}
           aria-expanded={open}
@@ -121,6 +127,7 @@ export default function Header() {
             )}
           </svg>
         </button>
+        </div>
       </div>
 
       {/* Мобильная навигация */}
@@ -133,13 +140,13 @@ export default function Header() {
         role="navigation"
         aria-label="Мобильная навигация"
       >
-        <nav className="border-t-2 border-imo-neon/20 bg-imo-deep/98 backdrop-blur-sm px-4 pb-4 pt-2">
+        <nav className="border-t-2 border-imo-neon/20 bg-imo-deep/98 backdrop-blur-sm px-4 pb-4 pt-2 light:border-imo-ocean/20 light:bg-[#F5F3F0]/98">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={closeMenu}
-              className="block text-sm text-white/70 hover:text-imo-neon font-body font-medium px-3 py-3 border-b border-white/5 last:border-b-0 transition-colors"
+              className="block text-sm text-white/70 hover:text-imo-neon font-body font-medium px-3 py-3 border-b border-white/5 last:border-b-0 transition-colors light:text-imo-deep/80 light:hover:text-imo-ocean light:border-imo-deep/10"
             >
               {link.label}
             </Link>
@@ -148,7 +155,7 @@ export default function Header() {
             href="https://ocean.study/"
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-xs text-center mt-3 px-4 py-3 bg-imo-neon text-imo-deep font-heading tracking-[0.1em] border-2 border-imo-neon shadow-brutal-sm hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none transition-all"
+            className="block text-xs text-center mt-3 px-4 py-3 bg-imo-neon text-imo-deep font-heading tracking-[0.1em] border-2 border-imo-neon shadow-brutal-sm hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none transition-all light:bg-imo-ocean light:text-white light:border-imo-ocean"
             aria-label="Официальный сайт ocean.study (открывается в новом окне)"
           >
             OCEAN.STUDY
