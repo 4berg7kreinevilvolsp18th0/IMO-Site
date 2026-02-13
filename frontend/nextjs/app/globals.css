@@ -378,6 +378,91 @@ select:focus-visible,
   100% { transform: translateX(100vw); opacity: 0; }
 }
 
+/* Рыбки — плавание */
+@keyframes fishSwim {
+  0%   { transform: translateX(-120%) translateY(0) scaleX(1); }
+  50%  { transform: translateX(50vw) translateY(-8px) scaleX(1); }
+  100% { transform: translateX(120vw) translateY(0) scaleX(1); }
+}
+
+@keyframes fishSwimReverse {
+  0%   { transform: translateX(120vw) translateY(0) scaleX(-1); }
+  50%  { transform: translateX(50vw) translateY(8px) scaleX(-1); }
+  100% { transform: translateX(-120%) translateY(0) scaleX(-1); }
+}
+
+@keyframes fishWiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50%      { transform: rotate(3deg); }
+}
+
+/* Крупные существа — медленное плавание */
+@keyframes creatureSwim {
+  0%   { transform: translateX(-120%) translateY(0) scaleX(1); }
+  100% { transform: translateX(120vw) translateY(0) scaleX(1); }
+}
+
+@keyframes creatureSwimReverse {
+  0%   { transform: translateX(120vw) translateY(0) scaleX(-1); }
+  100% { transform: translateX(-120%) translateY(0) scaleX(-1); }
+}
+
+/* Дельфин — волнообразное движение (ныряет и выныривает) */
+@keyframes dolphinDive {
+  0%   { transform: translateX(-120%) translateY(0) rotate(-5deg); }
+  20%  { transform: translateX(10vw) translateY(-12px) rotate(3deg); }
+  40%  { transform: translateX(40vw) translateY(0) rotate(-2deg); }
+  60%  { transform: translateX(70vw) translateY(-10px) rotate(4deg); }
+  80%  { transform: translateX(100vw) translateY(0) rotate(-3deg); }
+  100% { transform: translateX(130vw) translateY(-8px) rotate(2deg); }
+}
+
+/* Осьминог — покачивание щупалец */
+@keyframes octopusSway {
+  0%, 100% { transform: scaleY(1); }
+  50%      { transform: scaleY(1.05); }
+}
+
+/* Плавающие иконки — мягкое покачивание */
+@keyframes iconFloat {
+  0%, 100% { transform: translateY(0) rotate(-2deg); opacity: 0.7; }
+  50%      { transform: translateY(-8px) rotate(2deg); opacity: 1; }
+}
+
+.animate-creature-swim     { animation: creatureSwim 35s linear infinite; }
+.animate-creature-reverse { animation: creatureSwimReverse 40s linear infinite; }
+.animate-dolphin-dive     { animation: dolphinDive 22s ease-in-out infinite; }
+.animate-octopus-sway     { animation: octopusSway 2s ease-in-out infinite; }
+.animate-icon-float       { animation: iconFloat 4s ease-in-out infinite; }
+
+/* Пузырьки */
+@keyframes bubbleFloat {
+  0%   { transform: translateY(0) scale(1); opacity: 0.4; }
+  50%  { opacity: 0.7; }
+  100% { transform: translateY(-100vh) scale(0.6); opacity: 0; }
+}
+
+/* Волны — горизонтальный дрейф */
+@keyframes waveDrift {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-60px); }
+}
+
+@keyframes waveOpacity {
+  0%, 100% { opacity: 0.9; }
+  50%      { opacity: 1; }
+}
+
+.animate-fish-swim       { animation: fishSwim 18s ease-in-out infinite; }
+.animate-fish-swim-fast { animation: fishSwim 12s ease-in-out infinite; }
+.animate-fish-swim-slow { animation: fishSwim 25s ease-in-out infinite; }
+.animate-fish-reverse   { animation: fishSwimReverse 20s ease-in-out infinite; }
+.animate-fish-wiggle    { animation: fishWiggle 0.8s ease-in-out infinite; }
+.animate-bubble         { animation: bubbleFloat 6s ease-in infinite; }
+.animate-wave-drift     { animation: waveDrift 8s linear infinite; }
+.animate-wave-drift-rev { animation: waveDrift 12s linear infinite reverse; }
+.animate-wave-opacity   { animation: waveOpacity 4s ease-in-out infinite; }
+
 /* ============================================
    УТИЛИТЫ — НЕОБРУТАЛИЗМ
    ============================================ */
@@ -722,7 +807,20 @@ select:focus-visible,
   .grid-drift,
   .dot-pulse,
   .neon-sweep,
-  .scanline-bar {
+  .scanline-bar,
+  .animate-fish-swim,
+  .animate-fish-swim-fast,
+  .animate-fish-swim-slow,
+  .animate-fish-reverse,
+  .animate-fish-wiggle,
+  .animate-creature-swim,
+  .animate-creature-reverse,
+  .animate-dolphin-dive,
+  .animate-octopus-sway,
+  .animate-icon-float,
+  .animate-bubble,
+  .animate-wave-drift,
+  .animate-wave-drift-rev {
     animation: none !important;
   }
 }
