@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import info from '@/content/info.json';
-import { NeonGrid, AngularDivider, DotMatrix, ScanlineOverlay } from '@/components/OceanDecorations';
+import { NeonGrid, AngularDivider, DotMatrix, ScanlineOverlay, FishSchool, Bubbles } from '@/components/OceanDecorations';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -19,6 +19,8 @@ export default function ContactsPage() {
       <section className="relative overflow-hidden pt-28 pb-20 sm:pt-36 sm:pb-24 scanlines">
         <div className="absolute inset-0 bg-gradient-to-b from-[#050d1a] via-imo-navy to-imo-ocean" />
         <NeonGrid />
+        <FishSchool count={4} />
+        <Bubbles count={10} />
         <ScanlineOverlay />
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center">
