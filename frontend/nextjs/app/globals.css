@@ -624,6 +624,81 @@ select:focus-visible,
 }
 
 /* ============================================
+   СВЕТЛАЯ ТЕМА — .light на html
+   ============================================ */
+
+.light .brutal-card,
+.light .glass-card {
+  background: rgba(5, 26, 36, 0.06);
+  border-color: rgba(0, 129, 180, 0.25);
+  box-shadow: 4px 4px 0 rgba(0, 129, 180, 0.25);
+}
+
+.light .brutal-card:hover,
+.light .glass-card:hover {
+  background: rgba(5, 26, 36, 0.1);
+  border-color: rgba(0, 129, 180, 0.4);
+  box-shadow: 0 0 0 rgba(0, 129, 180, 0);
+}
+
+.light .brutal-card-rounded {
+  background: rgba(5, 26, 36, 0.06);
+  border-color: rgba(0, 129, 180, 0.25);
+  box-shadow: 4px 4px 0 rgba(0, 129, 180, 0.25);
+}
+
+.light .brutal-card-rounded:hover {
+  background: rgba(5, 26, 36, 0.1);
+  border-color: rgba(0, 129, 180, 0.4);
+  box-shadow: 0 0 0 rgba(0, 129, 180, 0);
+}
+
+.light .program-card {
+  background: rgba(5, 26, 36, 0.06);
+  border-color: rgba(0, 129, 180, 0.25);
+  box-shadow: 4px 4px 0 var(--accent-color, rgba(0, 129, 180, 0.3));
+}
+
+.light .program-card:hover {
+  border-color: var(--accent-color, rgba(0, 129, 180, 0.45));
+}
+
+.light ::-webkit-scrollbar-track {
+  background: #F5F3F0;
+  border-left-color: rgba(0, 129, 180, 0.2);
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: #E8E6E3;
+  border-color: rgba(0, 129, 180, 0.3);
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 129, 180, 0.4);
+  border-color: rgba(0, 129, 180, 0.5);
+}
+
+/* Основной контент — светлый фон и тёмный текст */
+.light main {
+  background: #F5F3F0 !important;
+  color: #051A24 !important;
+}
+
+/* Секции с bg-imo-deep — светлый фон */
+.light main section.bg-imo-deep {
+  background: #F5F3F0 !important;
+}
+
+/* Градиентные фоны внутри секций — светлый вариант */
+.light main .absolute.inset-0.bg-gradient-to-b {
+  background: linear-gradient(180deg, #F5F3F0 0%, #E8E6E3 50%, rgba(0,129,180,0.08) 100%) !important;
+}
+
+.light main .absolute.inset-0.bg-gradient-to-r {
+  background: linear-gradient(90deg, rgba(0,129,180,0.12) 0%, rgba(0,163,215,0.15) 50%, rgba(0,229,255,0.1) 100%) !important;
+}
+
+/* ============================================
    REDUCED MOTION — уважаем настройки пользователя
    ============================================ */
 
