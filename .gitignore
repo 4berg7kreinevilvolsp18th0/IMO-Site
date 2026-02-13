@@ -39,3 +39,4 @@ npm-debug.log*
 yarn.lock
 pnpm-lock.yaml
 IWO_Sait.code-workspace
+docs/BROWSERS.md
