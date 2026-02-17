@@ -8,6 +8,7 @@ import ThemeToggle from '@/components/ThemeToggle';
 const NAV_LINKS = [
   { href: '/', label: 'Главная' },
   { href: '/programs', label: 'Программы' },
+  { href: '/schedule', label: 'Расписание' },
   { href: '/news', label: 'Новости' },
   { href: '/about', label: 'О школе' },
   { href: '/for-students', label: 'Для студентов' },
