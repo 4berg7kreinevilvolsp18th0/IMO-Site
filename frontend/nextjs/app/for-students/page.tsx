@@ -144,36 +144,47 @@ export default function ForStudentsPage() {
 
                 {/* Карточки ссылок — на десктопе всегда видны, на мобильных — аккордеон */}
                 <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ${!isOpen ? 'hidden sm:grid' : 'grid'}`}>
-                  {cat.items.map((item) => (
-                    <a
-                      key={item.title}
-                      href={item.url}
-                      target={item.url.startsWith('#') ? undefined : '_blank'}
-                      rel={item.url.startsWith('#') ? undefined : 'noopener noreferrer'}
-                      className={`brutal-card p-5 border-2 ${colors.border} group hover:${colors.shadow} transition-all`}
-                    >
-                      <div className="flex items-start gap-3">
-                        <span className="text-xl flex-shrink-0 mt-0.5" aria-hidden="true">{item.icon}</span>
-                        <div className="min-w-0">
-                          <h3 className="text-sm font-medium text-white group-hover:text-imo-neon transition-colors leading-tight mb-1">
-                            {item.title}
-                          </h3>
-                          <p className="text-xs text-white/40 font-light leading-relaxed">
-                            {item.desc}
-                          </p>
+                  {cat.items.map((item) => {
+                    const isExternal = item.url.startsWith('http');
+                    const isInternal = item.url.startsWith('/');
+                    return (
+                      <a
+                        key={item.title}
+                        href={item.url}
+                        target={isExternal ? '_blank' : undefined}
+                        rel={isExternal ? 'noopener noreferrer' : undefined}
+                        className={`brutal-card p-5 border-2 ${colors.border} group hover:${colors.shadow} transition-all`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <span className="text-xl flex-shrink-0 mt-0.5" aria-hidden="true">{item.icon}</span>
+                          <div className="min-w-0">
+                            <h3 className="text-sm font-medium text-white group-hover:text-imo-neon transition-colors leading-tight mb-1">
+                              {item.title}
+                            </h3>
+                            <p className="text-xs text-white/40 font-light leading-relaxed">
+                              {item.desc}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                      {/* Внешняя ссылка индикатор */}
-                      {!item.url.startsWith('#') && (
-                        <div className="mt-3 flex items-center gap-1 text-[10px] text-white/20 group-hover:text-imo-neon/50 transition-colors">
-                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="square" strokeLinejoin="miter" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                          <span>{new URL(item.url).hostname}</span>
-                        </div>
-                      )}
-                    </a>
-                  ))}
+                        {isExternal && (
+                          <div className="mt-3 flex items-center gap-1 text-[10px] text-white/20 group-hover:text-imo-neon/50 transition-colors">
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="square" strokeLinejoin="miter" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                            <span>{new URL(item.url).hostname}</span>
+                          </div>
+                        )}
+                        {isInternal && (
+                          <div className="mt-3 flex items-center gap-1 text-[10px] text-imo-neon/30 group-hover:text-imo-neon/50 transition-colors">
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="square" strokeLinejoin="miter" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                            <span>ИМО ДВФУ</span>
+                          </div>
+                        )}
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
             );
